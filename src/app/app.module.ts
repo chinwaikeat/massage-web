@@ -10,16 +10,6 @@ import { ThemeModule } from './@theme/theme.module';
 import { SpinnerService } from './services/spinnerService/spinner.service';
 import { CookieService } from "ngx-cookie-service";
 import { MatModule } from './material-module/mat.module';
-import {
-  NbChatModule,
-  NbDatepickerModule,
-  NbDialogModule,
-  NbMenuModule,
-  NbSidebarModule,
-  NbToastrModule,
-  NbWindowModule,
-  NbLayoutModule,
-} from '@nebular/theme';
 
 
 @NgModule({
@@ -31,10 +21,12 @@ import {
     HttpClientModule,
     BrowserModule,
     AppRoutingModule,
+
     ThemeModule.forRoot(),
+    
     BrowserAnimationsModule,
     MatModule,
-    NbToastrModule.forRoot(),
+    
   ],
   exports:[
 
