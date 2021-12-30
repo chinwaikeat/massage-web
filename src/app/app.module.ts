@@ -9,6 +9,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ThemeModule } from './@theme/theme.module';
 import { SpinnerService } from './services/spinnerService/spinner.service';
 import { CookieService } from "ngx-cookie-service";
+import { MatModule } from './material-module/mat.module';
+import {
+
+  NbSidebarModule,
+  NbMenuModule
+} from '@nebular/theme';
+import { CoreModule } from './@core/core.module';
+
 
 
 @NgModule({
@@ -22,8 +30,13 @@ import { CookieService } from "ngx-cookie-service";
     AppRoutingModule,
     ThemeModule.forRoot(),
     BrowserAnimationsModule,
+    NbThemeModule.forRoot(),
+    CoreModule.forRoot(),//
+    NbSidebarModule.forRoot(),//
+    NbMenuModule.forRoot(),//
+    MatModule,
+    
   ],
-  
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [CookieService,SpinnerService],
   bootstrap: [AppComponent]
