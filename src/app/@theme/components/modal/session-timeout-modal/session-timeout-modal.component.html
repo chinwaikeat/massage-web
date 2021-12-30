@@ -1,0 +1,10 @@
+<nb-card status="info">
+  <nb-card-header></nb-card-header>
+  <nb-card-body>
+    {{message}}
+  </nb-card-body>
+  <nb-card-footer class="footer">
+    <button nbButton hero status="danger" (click)="save(1)">No</button>
+    <button nbButton hero status="primary" (click)="dismiss()">Resume</button>
+  </nb-card-footer>
+</nb-card>

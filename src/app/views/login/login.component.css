@@ -1,0 +1,100 @@
+.background-color-white {
+  background-image: url(../../../assets/images/backgroud.jpg) !important;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  background-color: white !important;
+  background-size: cover;
+}
+.sign-in-background {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  color: black !important;
+}
+
+.subtitle {
+  font-size: 20px;
+  font-weight: 400;
+  color: #1a1f37 !important;
+}
+
+.margin-top-small {
+  margin-top: 2em !important;
+}
+
+.position-center {
+  margin: 0 auto;
+  width: 100%;
+}
+
+.footer-link {
+  text-decoration: none;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+
+.footer-link-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1a1f37 !important;
+}
+
+.box-shadow {
+  border-radius: 0.25em;
+  border: none !important;
+  box-shadow: 0px 0px 8px 0px rgba(189, 187, 189, 1);
+  -webkit-box-shadow: 0px 0px 8px 0px rgba(189, 187, 189, 1);
+  -moz-box-shadow: 0px 0px 8px 0px rgba(189, 187, 189, 1);
+}
+
+@import '../../../@theme/styles/themes';
+
+@include nb-install-component() {
+  .flip-icon {
+    position: absolute;
+    right: 0.625rem;
+    top: 1rem;
+    @include nb-rtl(right, auto);
+    @include nb-rtl(left, 0.625rem);
+    cursor: pointer;
+  }
+
+  ::ng-deep {
+    .front-container {
+      max-width: 100%;
+    }
+
+    .flipped {
+      .back-container {
+        .flip-icon {
+          transform: scaleX(-1);
+        }
+      }
+
+      .front-container {
+        .flip-icon {
+          display: none;
+        }
+      }
+    }
+  }
+}
+.loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  padding-bottom: 56px;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

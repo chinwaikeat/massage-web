@@ -1,0 +1,12 @@
+@import '../../../../@theme/styles/themes';
+
+@include nb-install-component() {
+  nb-card {
+    max-width: 700px;
+    max-height: 500px;
+  }
+}
+.footer{
+  display: flex;
+  justify-content: space-between;
+}

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { SpinnerService } from '../spinner.service';
+import { SpinnerService } from '../../../services/spinnerService/spinner.service';
 const SPINNER_MESSAGE = 'Loading...';
 
 @Component({
@@ -17,7 +17,7 @@ export class SpinnerComponent implements OnInit {
 
   ngOnInit(): void {
     this.LOADING_TEXT = SPINNER_MESSAGE;
-        this.spinnerService.getData().subscribe(data => {
+        this.spinnerService.getData().subscribe((data: any) => {
             if (data) {
                 this.spinner.show();
             } else {
