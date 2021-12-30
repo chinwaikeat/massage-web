@@ -3,22 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { ThemeModule } from "../@theme/theme.module";
 import { LoginComponent } from './login/login.component';
 import { MatModule } from '../material-module/mat.module';
-import {
-  NbActionsModule,
-  NbButtonModule,
-  NbCardModule,
-  NbCheckboxModule,
-  NbDatepickerModule,
-  NbIconModule,
-  NbInputModule,
-  NbRadioModule,
-  NbSelectModule,
-  NbUserModule,
-  NbTooltipModule,
-  NbOptionModule,
-  NbLayoutModule,
-  NbAlertModule,
-} from '@nebular/theme';
+import { DashboardComponent } from './dashboard/dashboard.component';
+
 
 const routes: Routes = [
   {
@@ -28,11 +14,10 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [LoginComponent],
+  declarations: [LoginComponent, DashboardComponent],
   imports: [
     RouterModule.forChild(routes),
     ThemeModule,
-    NbInputModule,
     MatModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
