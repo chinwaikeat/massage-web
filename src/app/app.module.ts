@@ -9,7 +9,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ThemeModule } from './@theme/theme.module';
 import { SpinnerService } from './services/spinnerService/spinner.service';
 import { CookieService } from "ngx-cookie-service";
-import { MatModule } from './material-module/mat.module';
 
 
 @NgModule({
@@ -21,16 +20,10 @@ import { MatModule } from './material-module/mat.module';
     HttpClientModule,
     BrowserModule,
     AppRoutingModule,
-
     ThemeModule.forRoot(),
-    
     BrowserAnimationsModule,
-    MatModule,
-    
   ],
-  exports:[
-
-  ],
+  
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [CookieService,SpinnerService],
   bootstrap: [AppComponent]
