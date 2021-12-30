@@ -43,35 +43,39 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log("All Data = ", this.loginForm.value);
-    console.log("User Name = ", this.loginForm.value.Username);
-    console.log("Password = ", this.loginForm.value.Password);
+    // console.log("All Data = ", this.loginForm.value);
+    // console.log("User Name = ", this.loginForm.value.Username);
+    // console.log("Password = ", this.loginForm.value.Password);
 
-    if (this.loginForm.valid) {
-      this.spinnerService.activate();
-      this.apiService.login("api/auth", this.loginForm.value).subscribe(
-        res => {
-          this.spinnerService.deactivate();
-          if (res.isError) {
-            this.toastService.showToast('danger', 'Error', res.message);
-          } else {
-            this.toastService.showToast("success", 'Successful', "Autenticated");
-            this.storage.setAccessToken(res.data.token);
-            this.storage.setRole(res.data.role);
-            this.storage.setUserName(res.data.userName);
-            this.router.navigate(['dashboard']);
-          }
-        },
-        err => {
-          this.spinnerService.deactivate();
-          if (!err.ok && err.status == 0) {
-            this.toastService.showToast('danger', 'Error', err.message);
-          } else {
-            this.toastService.showToast('danger', 'Error', err.error?.message ?? 'Error connecting to server!');
-          }
-        }
-      );
-    }
+    // if (this.loginForm.valid) {
+    //   this.spinnerService.activate();
+    //   this.apiService.login("api/auth", this.loginForm.value).subscribe(
+    //     res => {
+    //       this.spinnerService.deactivate();
+    //       if (res.isError) {
+    //         this.toastService.showToast('danger', 'Error', res.message);
+    //       } else {
+    //         this.toastService.showToast("success", 'Successful', "Autenticated");
+    //         this.storage.setAccessToken(res.data.token);
+    //         this.storage.setRole(res.data.role);
+    //         this.storage.setUserName(res.data.userName);
+    //         this.router.navigate(['dashboard']);
+    //       }
+    //     },
+    //     err => {
+    //       this.spinnerService.deactivate();
+    //       if (!err.ok && err.status == 0) {
+    //         this.toastService.showToast('danger', 'Error', err.message);
+    //       } else {
+    //         this.toastService.showToast('danger', 'Error', err.error?.message ?? 'Error connecting to server!');
+    //       }
+    //     }
+    //   );
+    // }
+    console.log("*****************");
+    this.router.navigate(['pages/dashboard']);
+    
+
   }
 
   toggleShowPasswordText() {

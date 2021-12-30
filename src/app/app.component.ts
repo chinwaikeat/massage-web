@@ -21,18 +21,18 @@ export class AppComponent  implements OnInit {
 
     this.subscription = router.events.subscribe((event) => {
 
-      if (event instanceof NavigationStart) {
-        browserRefresh = !router.navigated;
-        var token = this.storage.getAccessToken();
-        console.log("refresh " + token);
-        if ((router.navigated || browserRefresh) && event.url !== '/' && event.url !== '/pages/login' && (token == null || token == '')) {
-          // console.log("token " + token)
-          this.storage.clear();
-          localStorage.clear();
-          console.log("************");
-          this.router.navigate(['/']);
-        }
-      }
+      // if (event instanceof NavigationStart) {
+      //   browserRefresh = !router.navigated;
+      //   var token = this.storage.getAccessToken();
+      //   console.log("refresh " + token);
+      //   if ((router.navigated || browserRefresh) && event.url !== '/' && event.url !== '/pages/login' && (token == null || token == '')) {
+      //     // console.log("token " + token)
+      //     this.storage.clear();
+      //     localStorage.clear();
+      //     console.log("************");
+      //     this.router.navigate(['/']);
+      //   }
+      // }
 
     });
   }

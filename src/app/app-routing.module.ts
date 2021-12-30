@@ -10,7 +10,7 @@ export const routes: Routes = [
   },
  
   { path: '', redirectTo: 'pages/login', pathMatch: 'full' },
-  { path: '**', redirectTo: 'dashboard' },
+  { path: '**', redirectTo: 'pages/dashboard' },
 ];
 
 @NgModule({
