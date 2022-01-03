@@ -16,6 +16,9 @@ import { LoginComponent } from './views/login/login.component';
 import { HomeComponent } from './views/home/home.component';
 import { DashboardComponent } from './views/dashboard/dashboard.component';
 import { SpinnerComponent } from './components/loading-spinner/spinner/spinner.component';
+import { AddUserComponent } from './views/userManagement/add-user/add-user.component';
+import { UserListComponent } from './views/userManagement/user-list/user-list.component';
+import { EditOrViewUserComponent } from './views/userManagement/edit-or-view-user/edit-or-view-user.component';
 
 
 
@@ -26,6 +29,9 @@ import { SpinnerComponent } from './components/loading-spinner/spinner/spinner.c
     LoginComponent,
     HomeComponent,
     DashboardComponent,
+    AddUserComponent,
+    UserListComponent,
+    EditOrViewUserComponent,
   ],
   imports: [
     HttpClientModule,
@@ -36,9 +42,7 @@ import { SpinnerComponent } from './components/loading-spinner/spinner/spinner.c
     MatModule,
   ],
   exports: [
-    LoginComponent, 
-    HomeComponent,
-    DashboardComponent,],
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     CookieService,

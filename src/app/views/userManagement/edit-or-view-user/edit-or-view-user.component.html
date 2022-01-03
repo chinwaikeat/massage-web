@@ -1,0 +1,155 @@
+<nb-card status="info" class="position-center" style="max-width: 600px;">
+    <nb-card-header>
+        <span class="subtitle" style="margin-left: 0.5em;">{{ action == "view" ? "Student Details" : "Edit Student"
+            }}</span>
+        <span style="float: right;">
+            <nb-icon class="cursor-pointer" (click)="close(2)" icon="close-circle-outline"></nb-icon>
+        </span>
+    </nb-card-header>
+    <nb-card-body>
+        <form [formGroup]="editStudentForm" (ngSubmit)="onSubmit()">
+
+            <div class="form-group row" style="height:60px;">
+                <label for="inputEmail1" class="label col-sm-4 col-form-label">Student Name</label>
+                <div class="col-sm-8">
+                    <input [status]="form.StudentName.invalid && submitted? 'danger' : 'basic'" type="text" nbInput
+                        fullWidth formControlName="StudentName" [attr.disabled]="action == 'view' ? '' : null"
+                        style="color:black" />
+                    <ng-container *ngIf="submitted && form.StudentName.errors">
+                        <p class="caption status-danger" *ngIf="form.StudentName.errors?.required">
+                            *Required!
+                        </p>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="form-group row" style="height:60px;">
+                <label for="inputEmail1" class="label col-sm-4 col-form-label">Class Name</label>
+                <div class="col-sm-8">
+                    <input [status]="form.ClassName.invalid && submitted? 'danger' : 'basic'" type="text" nbInput
+                        fullWidth formControlName="ClassName" [attr.disabled]="action == 'view' ? '' : null"
+                        style="color:black" />
+                    <ng-container *ngIf="submitted && form.ClassName.errors">
+                        <p class="caption status-danger" *ngIf="form.ClassName.errors?.required">
+                            *Required!
+                        </p>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="form-group row" style="height:60px;">
+                <label for="inputEmail1" class="label col-sm-4 col-form-label">Parent Name</label>
+                <div class="col-sm-8">
+                    <input [status]="form.ParentName.invalid && submitted? 'danger' : 'basic'" type="text" nbInput
+                        fullWidth formControlName="ParentName" [attr.disabled]="action == 'view' ? '' : null"
+                        style="color:black" />
+                    <ng-container *ngIf="submitted && form.ParentName.errors">
+                        <p class="caption status-danger" *ngIf="form.ParentName.errors?.required">
+                            *Required!
+                        </p>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="inputEmail1" class="label col-sm-4 col-form-label">Car Plates</label>
+                <div class="col-sm-8">
+                    <table style="
+                    border-radius: 5px;
+                    border-style: hidden; 
+                    box-shadow: 0 0 0 1px #666;">
+                        <tr style="background-color:#0095FF; color: white;">
+                            <th
+                                style="padding-left: 1em; padding-right: 1em; border-top-left-radius: 5px; text-align: center;">
+                                Car Plates
+                            </th>
+                            <ng-container *ngIf="action != 'view'">
+                                <th style="padding-left: 1em; border-top-right-radius: 5px; text-align: center;">
+                                    Action
+                                </th>
+                            </ng-container>
+
+                        </tr>
+                        <ng-container formArrayName="CarPlates">
+                            <ng-container *ngFor="
+                            let carPlate of carPlateControls.controls;
+                            index as i
+                          ">
+                                <ng-container *ngIf="carPlate.value.IsDeleted == false">
+                                    <ng-container [formGroupName]="i">
+                                        <tr>
+                                            <ng-container *ngIf="action == 'view'">
+                                                <td class="col-sm-8" style="padding-left: 1em; padding-right: 1em;"
+                                                    style="width: 300px; text-align: center;">
+                                                    {{carPlate.value.CarPlateNo}}
+                                                </td>
+                                            </ng-container>
+                                            <ng-container *ngIf="action != 'view'">
+                                                <td class="col-sm-3" style="padding-left: 1em; padding-right: 1em;">
+                                                    <input type="text" formControlName="CarPlateNo" nbInput
+                                                        style="width: 120px; color:black" />
+                                                </td>
+
+                                                <td class="col-sm-1 " style="width: 10px;">
+                                                    <button nbButton ghost status="danger" (click)="deleteCarPlate(i)">
+                                                        <nb-icon icon="trash-2-outline"></nb-icon>
+                                                    </button>
+                                                </td>
+                                            </ng-container>
+
+                                        </tr>
+                                    </ng-container>
+                                </ng-container>
+
+                            </ng-container>
+                        </ng-container>
+                    </table>
+
+                    <ng-container *ngIf="action != 'view'">
+                        <ng-container *ngIf="submitted && isCarPlateEmpty">
+                            <p class="caption status-danger">
+                                *Required!
+                            </p>
+                        </ng-container>
+                        <button class="mt-2" nbButton status="primary" type="button" (click)="addCarPlateItem()"
+                            size="medium">Add New</button>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="form-group row" style="height:90px;">
+                <label for="inputEmail1" class="label col-sm-4 col-form-label">Status</label>
+                <div class="col-sm-8">
+                    <ng-container *ngIf="action == 'view'">
+                        <input type="text" nbInput fullWidth formControlName="" maxlength="30" style="text-indent: -9999em;
+              text-shadow : 9999em 0 0 #000; color:black" disabled
+                            [value]="editStudentForm.value.IsActive == 'true' ? 'ACTIVE' : 'INACTIVE'">
+                    </ng-container>
+                    <ng-container *ngIf="action == 'edit'">
+                        <mat-radio-group formControlName="IsActive" style="display: flex; flex-direction: column;"
+                            [disabled]="action == 'view' ? '' : null">
+                            <mat-radio-button value="true" color="primary" style="margin: 5px;">ACTIVE
+                            </mat-radio-button>
+                            <mat-radio-button value="false" color="primary" style="margin: 5px;">INACTIVE
+                            </mat-radio-button>
+                        </mat-radio-group>
+                        <ng-container *ngIf="submitted && form.IsActive.errors">
+                            <p class="caption status-danger" *ngIf="form.IsActive.errors?.required">
+                                *Required!
+                            </p>
+                        </ng-container>
+                    </ng-container>
+
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="position-center" style=" text-align: center;">
+                    <ng-container *ngIf="action == 'edit' ">
+                        <button nbButton status="primary" type="submit" size="medium" style="margin-right: 20px;">
+                            Update
+                        </button>
+                    </ng-container>
+                    <button nbButton status="danger" type="button" (click)="close(2)" size="medium">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </form>
+    </nb-card-body>
+</nb-card>
