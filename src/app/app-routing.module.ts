@@ -4,13 +4,17 @@ import { Routes, RouterModule } from '@angular/router';
 
 export const routes: Routes = [
   {
-    path: 'pages',
-    loadChildren: () => import('./views/pages.module')
-      .then(m => m.PagesModule),
+    path: 'auth',
+    loadChildren: () => import('./pageModules/login.module')
+      .then(m => m.LoginModule),
   },
- 
-  { path: '', redirectTo: 'pages/login', pathMatch: 'full' },
-  { path: '**', redirectTo: 'pages/dashboard' },
+  {
+    path: 'dashboard',
+    loadChildren: () => import('./pageModules/dashboard.module')
+      .then(m => m.DashboardModule),
+  },
+  { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
+  { path: '**', redirectTo: 'dashboard' },
 ];
 
 @NgModule({

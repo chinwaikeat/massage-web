@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {StorageService} from '../../services/storageService/storage.service';
-import { NbComponentStatus, NbDialogService, NbSidebarService, NbToastrService, NbMenuService } from "@nebular/theme";
-
+import { NbComponentStatus, NbDialogService, NbSidebarService, NbToastrService, NbMenuService, NbMenuItem } from "@nebular/theme";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,15 +14,17 @@ import { NbComponentStatus, NbDialogService, NbSidebarService, NbToastrService, 
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  menu: any = [{
+  menu: NbMenuItem[] = [{
     title: 'Dashboard',
-    icon: 'grid-outline',
+    icon: 'people-outline',
     link: '/dashboard/home',
-  },];
-  constructor(private storage: StorageService, private sidebarService: NbSidebarService,) { }
+  }];
+ 
+  constructor(private storage: StorageService, private sidebarService: NbSidebarService,private router: Router,) { }
 
   ngOnInit(): void {
-    this.setMenuItem();
+  //  this.setMenuItem();
+  this.router.navigate(["dashboard/home"]);
   }
 
   setMenuItem() {
@@ -48,7 +50,7 @@ export class DashboardComponent implements OnInit {
       this.menu.push({
         title: 'Dashboard',
         icon: 'grid-outline',
-        link: '/dashboard/home',
+        link: '/pages/dashboard',
       },)
     }
   }

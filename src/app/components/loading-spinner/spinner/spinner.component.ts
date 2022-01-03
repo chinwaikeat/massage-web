@@ -24,6 +24,7 @@ export class SpinnerComponent implements OnInit {
                 this.spinner.hide();
             }
         });
+    
   }
 
 }

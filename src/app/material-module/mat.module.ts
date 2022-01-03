@@ -59,7 +59,7 @@ import {
     NbSidebarModule,
     NbWindowModule,
     NbToastrModule,
-
+    NbThemeModule
   } from '@nebular/theme';
 
 @NgModule({
@@ -119,11 +119,12 @@ import {
     NbAlertModule,
     NbChatModule,
     NbDialogModule,
-    NbMenuModule,
-    NbSidebarModule,
     NbWindowModule,
+    NgxSpinnerModule,
+    NbMenuModule.forRoot(),
+    NbSidebarModule.forRoot(),
     NbToastrModule.forRoot(),
-    NgxSpinnerModule
+    NbThemeModule.forRoot()
   ],
   exports: [
     CommonModule,
@@ -184,6 +185,7 @@ import {
     NbMenuModule,
     NbSidebarModule,
     NbWindowModule,
+    NbThemeModule,
     NgxSpinnerModule
   ],
   declarations: [],

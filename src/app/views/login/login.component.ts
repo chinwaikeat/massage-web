@@ -73,7 +73,7 @@ export class LoginComponent implements OnInit {
     //   );
     // }
     console.log("*****************");
-    this.router.navigate(['pages/dashboard']);
+    this.router.navigate(['dashboard/home']);
     
 
   }

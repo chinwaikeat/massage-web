@@ -1,8 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NbMediaBreakpointsService, NbMenuService, NbSidebarService, NbThemeService,NbComponentStatus,NbToastrService } from '@nebular/theme';
 import { filter } from 'rxjs/operators';
-import { UserData } from '../../../@core/data/users';
-import { LayoutService } from '../../../@core/utils';
+import { LayoutService } from '../../../services/layoutService/layout.service';
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
@@ -46,7 +45,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   constructor(private sidebarService: NbSidebarService,
               private menuService: NbMenuService,
               private themeService: NbThemeService,
-              private userService: UserData,
               private layoutService: LayoutService,
               private breakpointService: NbMediaBreakpointsService,
               private toastr: NbToastrService,
