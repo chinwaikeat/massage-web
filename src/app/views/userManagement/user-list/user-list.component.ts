@@ -74,7 +74,7 @@ export class UserListComponent implements OnInit {
   }
 
   addUser() {
-    this.router.navigate(['/dashboard/user/add']);
+    this.router.navigate(['/dashboard/add']);
   }
 
   viewOrEditUserDetails(row:any, isEdit:boolean) {
