@@ -1,115 +1,114 @@
 <nb-card status="info">
-    <nb-card-header>
-      <span class="subtitle">Student List</span><span style="margin-left: 0.5em;">
-        <nb-icon class="cursor-pointer" icon="plus-circle-outline" (click)="addUser()"></nb-icon>
-      </span>
-    </nb-card-header>
-    <nb-card-body>
-      <!-- <input type="file" id="input" (change)="excelRead($event)" accept=".xlsx, .xls, .csv" /> -->
-
-      <div class="table-responsive" style="width: max-content , auto !important;">
-        <form [formGroup]="searchForm" (ngSubmit)="filterSubmit(true)">
-          <div class="d-flex justify-content-between">
-            <div>
-              <mat-form-field style="margin-right: 20px;">
-                <mat-label>Student Name</mat-label>
-                <input matInput placeholder="Student Name" formControlName="StudentName" maxlength="30">
-                <mat-error *ngIf="form.StudentName.errors?.maxlength">Cannot exceed 30 characters.
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field style="margin-right: 20px;">
-                <mat-label>Class Name</mat-label>
-                <input matInput placeholder="Class Name" formControlName="ClassName" maxlength="30">
-                <mat-error *ngIf="form.ClassName.errors?.maxlength">Cannot exceed 30 characters.
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field style="margin-right: 20px;">
-                <mat-label>Car Plate No</mat-label>
-                <input matInput placeholder="Car Plate No" formControlName="CarPlateNo" maxlength="30">
-                <mat-error *ngIf="form.CarPlateNo.errors?.maxlength">Cannot exceed 30 characters.
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field style="margin-right: 20px;">
-                <mat-label>Status</mat-label>
-                <mat-select formControlName="IsActive">
-                  <mat-option value="true">ACTIVE</mat-option>
-                  <mat-option value="false">INACTIVE</mat-option>
-                </mat-select>
-              </mat-form-field>
-              <mat-form-field style="margin-right: 20px;">
-                <mat-label>Choose a date</mat-label>
-                <input matInput (click)="dateRangePicker.open()" [satDatepicker]="dateRangePicker"
-                  formControlName="DateRange" autocomplete="disabled" style="cursor: pointer; text-indent: -9999em;
+  <nb-card-header>
+    <span class="subtitle">User List</span><span style="margin-left: 0.5em;">
+      <nb-icon class="cursor-pointer" icon="plus-circle-outline" (click)="addUser()"></nb-icon>
+    </span>
+  </nb-card-header>
+  <nb-card-body>
+    <div class="table-responsive" style="width: max-content , auto !important;">
+      <form [formGroup]="searchForm" (ngSubmit)="filterSubmit(true)">
+        <div class="d-flex justify-content-between">
+          <div>
+            <mat-form-field style="margin-right: 20px;">
+              <mat-label>User Name</mat-label>
+              <input matInput placeholder="User Name" formControlName="UserName" maxlength="30">
+              <mat-error *ngIf="form.UserName.errors?.maxlength">Cannot exceed 30 characters.
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field style="margin-right: 20px;">
+              <mat-label>Role</mat-label>
+              <mat-select formControlName="Role">
+                <ng-container *ngIf="role == 'MASTER ADMIN'">
+                  <mat-option value="MASTER ADMIN">MASTER ADMIN</mat-option>
+                </ng-container>
+                <mat-option value="MASTER_ADMIN">MASTER ADMIN</mat-option>
+                <mat-option value="NORMAL_ADMIN">ADMIN</mat-option>
+                <mat-option value="DOCTOR">DOCTOR</mat-option>
+                <mat-option value="USER">USER</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field style="margin-right: 20px;">
+              <mat-label>Status</mat-label>
+              <mat-select formControlName="IsActive">
+                <mat-option value="true">ACTIVE</mat-option>
+                <mat-option value="false">INACTIVE</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field style="margin-right: 20px;">
+              <mat-label>Choose a date</mat-label>
+              <input matInput (click)="dateRangePicker.open()" [satDatepicker]="dateRangePicker"
+                formControlName="DateRange" autocomplete="disabled" style="cursor: pointer; text-indent: -9999em;
                        text-shadow : 9999em 0 0 #000;" readonly onkeydown="return false">
-                <sat-datepicker #dateRangePicker [rangeMode]="true">
-                </sat-datepicker>
-                <sat-datepicker-toggle matSuffix [for]="dateRangePicker"></sat-datepicker-toggle>
-              </mat-form-field>
-              <button mat-raised-button color="primary" type="submit" style="margin-right: 20px;">Apply</button>
-              <button mat-raised-button color="warn" type="button" (click)="clearForm()">Clear</button>
-            </div>
-  
+              <sat-datepicker #dateRangePicker [rangeMode]="true">
+              </sat-datepicker>
+              <sat-datepicker-toggle matSuffix [for]="dateRangePicker"></sat-datepicker-toggle>
+            </mat-form-field>
+            <button mat-raised-button color="primary" type="submit" style="margin-right: 20px;">Apply</button>
+            <button mat-raised-button color="warn" type="button" (click)="clearForm()">Clear</button>
           </div>
-  
-        </form>
-  
-        <table *ngIf="viewUser" [dataSource]="dataSource" mat-table style="width: -webkit-fill-available;">
-          <ng-container matColumnDef="no">
-            <th class="headerText" *matHeaderCellDef mat-header-cell>No</th>
-            <td *matCellDef="let i = index" mat-cell>
-              {{ i + (page*size) + 1 }}
-            </td>
-          </ng-container>
-  
-          <ng-container matColumnDef="studentName">
-            <th class="headerText" *matHeaderCellDef mat-header-cell>Student Name</th>
-            <td *matCellDef="let row" mat-cell>{{ row.StudentName }}</td>
-          </ng-container>
-  
-          <ng-container matColumnDef="className">
-            <th class="headerText" *matHeaderCellDef mat-header-cell>Class Name</th>
-            <td *matCellDef="let row" mat-cell>{{ row.ClassName }}</td>
-          </ng-container>
-  
-          <ng-container matColumnDef="status">
-            <th class="headerText" *matHeaderCellDef mat-header-cell>Status</th>
-            <td *matCellDef="let row" mat-cell>{{ row.IsActive ? "Active" : "Inactive" }}</td>
-          </ng-container>
-  
-          <ng-container matColumnDef="createdAt">
-            <th class="headerText" *matHeaderCellDef mat-header-cell>Created At</th>
-            <td *matCellDef="let row" mat-cell>
-              {{ row.CreatedAt | date:'d MMMM y, h:mm a'}}
-            </td>
-          </ng-container>
-  
-          <ng-container matColumnDef="actions" >
-            <th class="headerText" *matHeaderCellDef mat-header-cell style="padding-left:35px;">Actions</th>
-            <td *matCellDef="let row" mat-cell (click)="$event.stopPropagation()">
-              <button nbButton ghost (click)="viewOrEditUserDetails(row, true)" status="primary" style="margin-right: 10px;">
-                <nb-icon icon="edit-outline"></nb-icon>
-              </button>
-              <!-- <button nbButton status="danger" class="btn btn-outline-secondary" mwlConfirmationPopover [popoverTitle]="popoverTitle"
+
+        </div>
+
+      </form>
+
+      <table *ngIf="viewUser" [dataSource]="dataSource" mat-table style="width: -webkit-fill-available;">
+        <ng-container matColumnDef="no">
+          <th class="headerText" *matHeaderCellDef mat-header-cell >No</th>
+          <td *matCellDef="let i = index" mat-cell>
+            {{ i + (page*size) + 1 }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="userName">
+          <th class="headerText" *matHeaderCellDef mat-header-cell>User Name</th>
+          <td *matCellDef="let row" mat-cell>{{ row.UserName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="role">
+          <th class="headerText" *matHeaderCellDef mat-header-cell>Role</th>
+          <td *matCellDef="let row" mat-cell>{{ row.Role }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th class="headerText" *matHeaderCellDef mat-header-cell>Status</th>
+          <td *matCellDef="let row" mat-cell>{{ row.IsActive ? "Active" : "Inactive" }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="createdAt">
+          <th class="headerText" *matHeaderCellDef mat-header-cell>Created At</th>
+          <td *matCellDef="let row" mat-cell>
+            {{ row.CreatedAt | date:'d MMMM y, h:mm a'}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th class="headerText" *matHeaderCellDef mat-header-cell style="padding-left:35px;">Actions</th>
+          <td *matCellDef="let row" mat-cell (click)="$event.stopPropagation()">
+            <button nbButton ghost (click)="editUser(row)" status="primary" style="margin-right: 10px;">
+              <nb-icon icon="edit-outline"></nb-icon>
+            </button>
+            <!-- <button nbButton status="danger" class="btn btn-outline-secondary" mwlConfirmationPopover [popoverTitle]="popoverTitle"
                       [popoverMessage]="popoverMessage" placement="left" (confirm)="deleteClaimType(row)" (cancel)="cancelClicked = true">
                       <nb-icon icon="trash-2-outline"></nb-icon>
                     </button> -->
+            <ng-container *ngIf="row.Role != 'MASTER ADMIN'">
               <button nbButton ghost status="danger" (click)="deleteUser(row)">
                 <nb-icon icon="trash-2-outline"></nb-icon>
               </button>
-  
-            </td>
-            <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
-            <tr *matRowDef="let row; columns: displayedColumns" mat-row (click)="viewOrEditUserDetails(row, false)"
-              style="cursor: pointer;"></tr>
-          </ng-container>
-  
-        </table>
-        <mat-paginator #paginator (page)="onPaginateChange($event)" [length]="pageLength"
-          [pageSizeOptions]="pageSizeOptions" [pageSize]="size" showFirstLastButtons>
-        </mat-paginator>
-        <div *ngIf="!viewUser" class="container">
-          <h3>You don't have permission to view students!</h3>
-        </div>
+            </ng-container>
+          </td>
+          <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+          <tr *matRowDef="let row; columns: displayedColumns" mat-row (click)="viewUserDetails(row)"
+            style="cursor: pointer;"></tr>
+        </ng-container>
+
+      </table>
+      <mat-paginator #paginator (page)="onPaginateChange($event)" [length]="pageLength"
+        [pageSizeOptions]="pageSizeOptions" [pageSize]="size" showFirstLastButtons>
+      </mat-paginator>
+      <div *ngIf="!viewUser" class="container">
+        <h3>You don't have permission to view users!</h3>
       </div>
-    </nb-card-body>
-  </nb-card>
+    </div>
+  </nb-card-body>
+</nb-card>

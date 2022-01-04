@@ -9,7 +9,7 @@ import { ApiService } from '../../../services/apiService/api-service.service';
 import { StorageService } from '../../../services/storageService/storage.service';
 import { SpinnerService } from '../../../services/spinnerService/spinner.service';
 import { ToastService } from '../../../services/toastService/toast.service';
-import { NbComponentStatus, NbDialogService, NbToastrService } from '@nebular/theme';
+import { NbDialogService  } from '@nebular/theme';
 import { HttpParams } from '@angular/common/http';
 import { ConfirmationModalComponent } from '../../../@theme/components/modal/confirmation-modal/confirmation-modal.component';
 import { EditOrViewUserComponent } from '../edit-or-view-user/edit-or-view-user.component';
@@ -20,9 +20,9 @@ import { EditOrViewUserComponent } from '../edit-or-view-user/edit-or-view-user.
   styleUrls: ['./user-list.component.scss']
 })
 export class UserListComponent implements OnInit {
-  displayedColumns = ['no', 'studentName', 'className', 'status', 'createdAt', 'actions'];
+  displayedColumns = ['no', 'userName', 'role', 'status', 'createdAt', 'actions'];
   dataSource = new MatTableDataSource();
-  viewUser = false;
+  viewUser = true;
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
@@ -34,6 +34,12 @@ export class UserListComponent implements OnInit {
   pageSizeOptions = [5, 10, 15, 20];
   searchForm!: FormGroup;
   isLoading = false;
+  role: any;
+
+  exampleData =  [
+    {  UserName: 'Pending', Role: 'Annual', Status: '1/10/2020', CreatedAt: '1/10/2020'},
+    
+  ];
 
   userData: any;
   constructor( 
@@ -46,8 +52,8 @@ export class UserListComponent implements OnInit {
     @Optional() private dialogService: NbDialogService,
     private toastService: ToastService,) {
       this.searchForm = this.formBuilder.group({
-        StudentName: [null, Validators.maxLength(30)],
-        ClassName: [null],
+        UserName: [null, Validators.maxLength(30)],
+        Role: [null],
         CarPlateNo: [null],
         IsActive: [null],
         DateRange: []
@@ -56,162 +62,37 @@ export class UserListComponent implements OnInit {
      }
 
   ngOnInit(): void {
+   
+    this.dataSource.data = this.exampleData;
+
   }
 
-  clearForm() {
-    let studentName = this.searchForm.value.StudentName;
-    let className = this.searchForm.value.ClassName;
-    let carPlateNo = this.searchForm.value.CarPlateNo;
-    let status = this.searchForm.value.IsActive;
-    let dateRange = this.searchForm.value.DateRange
-    if (status != null || studentName != null || className != null || carPlateNo != null || dateRange != null) {
-      this.paginator.firstPage();
-      this.searchForm.reset();
-      this.page = 0;
-      this.size = 10;
-      this.getUserData();
-    }
-  }
-
-  addUser() {
-    this.router.navigate(['/dashboard/add']);
-  }
-
-  viewOrEditUserDetails(row:any, isEdit:boolean) {
-    console.log(row);
-    this.dialogService.open(EditOrViewUserComponent, {
-      context: {
-        eventData: row,
-        action: isEdit ? "edit": "view"
-      },
-    }).onClose.subscribe(value => {
-      if (value == 1) {
-        this.getUserData();
-      }
-    })
-  }
-
-
-  deleteUser(row:any) {
-    this.dialogService.open(ConfirmationModalComponent, {
-      context: {
-        title: "Delete Confirmation",
-        message: "Are you sure delete student of " + row.StudentName + "?",
-      },
-    }).onClose.subscribe(value => {
-      if (value == 1) {
-        this.spinnerService.activate();
-        let params = new HttpParams();
-        params = params.append('studentId', row.StudentId ?? '');
-        this.apiService.actualDelete("api/student/delete", params)
-          .subscribe(
-            (res) => {
-              this.spinnerService.deactivate();
-              console.log(res)
-              if (res.isError) {
-                this.toastService.showToast("danger", 'Error', "Failed to delete student.");
-              } else if (res.isTokenExpired) {
-                this.toastService.showToast('danger', 'Error', res.message);
-                this.storageService.clear();
-                this.router.navigate(['/']);
-              } else {
-                this.toastService.showToast("success", 'Successful', "Deleted successfully.");
-                this.getUserData();
-              }
-            },
-            (err) => {
-              this.spinnerService.deactivate();
-              console.log(err)
-              if (!err.ok && err.status == 0) {
-                this.toastService.showToast('danger', 'Error', err.message);
-              } else {
-                this.toastService.showToast('danger', 'Error', err.error?.message ?? 'Error connecting to server!');
-              }
-            }
-          );
-      }
-    })
-  }
-
-
-  private getUserData() {
-    this.spinnerService.activate();
-    let params = new HttpParams();
-    params = params.append('pageNumber', this.page.toString());
-    params = params.append('pageSize', this.size.toString());
-    this.apiService.get('api/student/getAll', params).subscribe(
-      res => {
-        this.spinnerService.deactivate();
-        console.log(res);
-        if (res.isError) {
-          this.toastService.showToast('danger', 'Error', res.message);
-        } else if (res.isTokenExpired) {
-          this.toastService.showToast('danger', 'Error', res.message);
-          this.storageService.clear();
-          this.router.navigate(['/']);
-        }
-        else {
-          this.userData = res.data;
-          this.pageLength = res.pageDetail.totalElements;
-          this.dataSource = new MatTableDataSource(this.userData);
-        }
-      },
-      err => {
-        this.spinnerService.deactivate();
-        if (!err.ok && err.status == 0) {
-          this.toastService.showToast('danger', 'Error', err.message);
-        } else {
-          this.toastService.showToast('danger', 'Error', err.error?.message ?? 'Error connecting to server!');
-        }
-      }
-    )
-  }
-
-  onPaginateChange(event:any) {
-    this.size = event.pageSize;
-    this.page = event.pageIndex;
-    let studentName = this.searchForm.value.studentName;
-    let carPlateNo = this.searchForm.value.CarPlateNo;
-    let className = this.searchForm.value.ClassName;
-    let status = this.searchForm.value.IsActive;
-    let dateRange = this.searchForm.value.DateRange
-    let params = new HttpParams();
-
-    if (status == null && studentName == null && className == null && carPlateNo == null && dateRange == null) {
-      this.getUserData();
-    } else {
-      this.filterSubmit(false);
-    }
-  }
-
-  filterSubmit(clear?:any) {
+  filterSubmit(clear: any) {
     console.log(this.searchForm.value);
     if (clear) {
       this.paginator.firstPage();
     }
     if (this.searchForm.valid && this.searchForm.errors == null) {
-
-      let studentName = this.searchForm.value.StudentName;
-      let className = this.searchForm.value.ClassName;
-      let carPlateNo = this.searchForm.value.CarPlateNo;
+      
+      let userName = this.searchForm.value.UserName;
+      let role = this.searchForm.value.Role;
       let status = this.searchForm.value.IsActive;
-      let dateRange = this.searchForm.value.DateRange;
+      let dateRange = this.searchForm.value.DateRange
       let params = new HttpParams();
 
-      if (status == null && studentName == null && className == null && carPlateNo == null &&  dateRange == null) {
+      if (status == null && userName == null && role == null && dateRange == null) {
         console.log("empty")
         this.toastService.showToast('danger', 'Error', 'Please input input filter value');
       } else {
         this.spinnerService.activate();
-        params = params.append('studentName', studentName ?? '');
-        params = params.append('className', className ?? '');
-        params = params.append('carPlateNo', carPlateNo ?? '');
+        params = params.append('userName', userName ?? '');
+        params = params.append('role', role ?? '');
         params = params.append('status', status ?? '');
         params = params.append('pageNumber', this.page.toString());
         params = params.append('pageSize', this.size.toString());
         params = params.append('dateFrom', dateRange == null ? '' : this.datePipe.transform(this.searchForm.value.DateRange.begin, 'yyyy-MM-dd')!);
         params = params.append('dateTo', dateRange == null ? '' : this.datePipe.transform(this.searchForm.value.DateRange.end, 'yyyy-MM-dd')!);
-        this.apiService.get('api/student/getFilteredStudent', params).subscribe(
+        this.apiService.get('api/user/getFilteredUser', params).subscribe(
           res => {
             this.spinnerService.deactivate();
             if (res.isError) {
@@ -233,12 +114,156 @@ export class UserListComponent implements OnInit {
             if (!err.ok && err.status == 0) {
               this.toastService.showToast('danger', 'Error', err.message);
             } else {
-              this.toastService.showToast('danger', 'Error', err.error?.message ?? 'Error connecting to server!');
-            }
+              this.toastService.showToast('danger', 'Error',err.error?.message??'Error connecting to server!');
+            }   
           }
         )
       }
 
+    }
+  }
+
+  clearForm() {
+    let userName = this.searchForm.value.UserName;
+    let role = this.searchForm.value.Role;
+    let status = this.searchForm.value.IsActive;
+    let dateRange = this.searchForm.value.DateRange
+    if(status != null || userName != null || role != null || dateRange != null){
+      this.paginator.firstPage();
+      this.searchForm.reset();
+      this.page = 0;
+      this.size = 10;
+      this.getUserData();
+    }
+  }
+
+  updateStatus() {
+    let data = this.searchForm.value;
+  }
+
+  addUser() {
+    this.router.navigate(['/dashboard/add']);
+  }
+
+  editUser(row: any) {
+    console.log(row);
+    this.dialogService.open(EditOrViewUserComponent, {
+      context: {
+        eventData: row, 
+        action: "edit"
+      },
+    }).onClose.subscribe(value => {
+      if(value == 1){
+       // this.getUserData();
+      }
+    })
+  }
+
+
+
+  viewUserDetails(row:any){
+    console.log(row);
+    this.dialogService.open(EditOrViewUserComponent, {
+      context: {
+        eventData: row,
+        action: "view" 
+      },
+    }).onClose.subscribe(value => {
+      if(value == 1){
+        this.getUserData();
+      }
+    })
+  }
+
+  deleteUser(row:any) {
+    this.dialogService.open(ConfirmationModalComponent, {
+      context: {
+        title: "Delete Confirmation",
+        message: "Are you sure delete user of " + row.UserName + "?",
+      },
+    }).onClose.subscribe(value => {
+      if (value == 1) {
+        this.spinnerService.activate();
+        let params = new HttpParams();
+        params = params.append('userId', row.UserId ?? '');
+        this.apiService.actualDelete("api/user/delete", params)
+          .subscribe(
+            (res) => {
+              this.spinnerService.deactivate();
+              console.log(res)
+              if (res.isError) {
+                this.toastService.showToast("danger", 'Error', "Failed to delete user.");
+              } else if (res.isTokenExpired) {
+                this.toastService.showToast('danger', 'Error', res.message);
+                this.storageService.clear();
+                this.router.navigate(['/']);
+              } else {
+                this.toastService.showToast("success", 'Successful', "Deleted successfully.");
+                this.getUserData();
+              }
+            },
+            (err) => {
+              this.spinnerService.deactivate();
+              console.log(err)
+              if (!err.ok && err.status == 0) {
+                this.toastService.showToast('danger', 'Error', err.message);
+              } else {
+                this.toastService.showToast('danger', 'Error',err.error?.message??'Error connecting to server!');
+              }   
+            }
+          );
+      }
+    })
+  }
+
+
+  getUserData() {
+    this.spinnerService.activate();
+    let params = new HttpParams();
+    params = params.append('pageNumber', this.page.toString());
+    params = params.append('pageSize', this.size.toString());
+    this.apiService.get('api/user/getAll', params).subscribe(
+      res => {
+        this.spinnerService.deactivate();
+        console.log(res);
+        if (res.isError) {
+          this.toastService.showToast('danger','Error', res.message);
+        } else if (res.isTokenExpired) {
+          this.toastService.showToast('danger', 'Error', res.message);
+          this.storageService.clear();
+          this.router.navigate(['/']);
+        }
+        else {
+          this.userData = res.data;
+          this.pageLength = res.pageDetail.totalElements;
+          this.dataSource = new MatTableDataSource(this.userData);
+        }
+      },
+      err => {
+        this.spinnerService.deactivate();
+        if (!err.ok && err.status == 0) {
+          this.toastService.showToast('danger', 'Error', err.message);
+        } else {
+          this.toastService.showToast('danger', 'Error',err.error?.message??'Error connecting to server!');
+        }   
+      }
+    )
+  }
+
+
+  onPaginateChange(event:any) {
+    this.size = event.pageSize;
+    this.page = event.pageIndex;
+    let userName = this.searchForm.value.UserName;
+    let role = this.searchForm.value.Role;
+    let status = this.searchForm.value.IsActive;
+    let dateRange = this.searchForm.value.DateRange
+    let params = new HttpParams();
+
+    if (status == null && userName == null && role == null && dateRange == null) {
+      this.getUserData();
+    }else{
+      this.filterSubmit(false);
     }
   }
 

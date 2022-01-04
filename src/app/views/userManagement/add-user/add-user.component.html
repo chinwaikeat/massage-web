@@ -1,1 +1,178 @@
-<p>add-user works!</p>
+<nb-card status="info" class="position-center" style="max-width: 600px;">
+    <nb-card-header>
+        <span>
+            <nb-icon class="cursor-pointer" (click)="goback()" icon="arrow-back-outline"></nb-icon>
+        </span>
+        <span class="subtitle" style="margin-left: 0.5em;">Add User</span>
+    </nb-card-header>
+    <nb-card-body>
+        <form [formGroup]="addUserForm" (ngSubmit)="onSubmit()">
+
+           
+            <div class="form-group row" style="height:60px;">
+                <label for="inputEmail1" class="label col-sm-4 col-form-label">First Name</label>
+                <div class="col-sm-8">
+                    <input [status]="form.FirstName.invalid && submitted? 'danger' : 'basic'" type="text" nbInput
+                        fullWidth formControlName="FirstName" style="color:black" />
+                    <ng-container *ngIf="submitted && form.FirstName.errors">
+                        <p class="caption status-danger" *ngIf="form.FirstName.errors?.required">
+                            *Required!
+                        </p>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="form-group row" style="height:60px;">
+                <label for="inputEmail1" class="label col-sm-4 col-form-label">Last Name</label>
+                <div class="col-sm-8">
+                    <input [status]="form.LastName.invalid && submitted? 'danger' : 'basic'" type="text" nbInput
+                        fullWidth formControlName="LastName" style="color:black" />
+                    <ng-container *ngIf="submitted && form.LastName.errors">
+                        <p class="caption status-danger" *ngIf="form.LastName.errors?.required">
+                            *Required!
+                        </p>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="form-group row" style="height:60px;">
+                <label for="inputEmail1" class="label col-sm-4 col-form-label">User Name</label>
+                <div class="col-sm-8">
+                    <input [status]="form.UserName.invalid && submitted? 'danger' : 'basic'" type="text" nbInput
+                        fullWidth formControlName="UserName" style="color:black" />
+                    <ng-container *ngIf="submitted && form.UserName.errors">
+                        <p class="caption status-danger" *ngIf="form.UserName.errors?.required">
+                            *Required!
+                        </p>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="form-group row" style="height:60px;">
+                <label for="inputEmail1" class="label col-sm-4 col-form-label">Email</label>
+                <div class="col-sm-8">
+                    <input [status]="form.Email.invalid && submitted? 'danger' : 'basic'" type="text" nbInput
+                        fullWidth formControlName="Email" style="color:black" />
+                    <ng-container *ngIf="submitted && form.Email.errors">
+                        <p class="caption status-danger" *ngIf="form.Email.errors?.required">
+                            *Required!
+                        </p>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="form-group row" style="height:60px;">
+                <label for="inputEmail1" class="label col-sm-4 col-form-label">Password</label>
+                <div class="col-sm-8">
+                    <div class="input-group ">
+                        <input nbInput formControlName="Password" name="Password"
+                            [type]="isShowPassword ? 'text' : 'Password'" id="input-password"
+                            class="form-control size-large shadow-none" style="border-radius: 2px 0px 0px 2px"
+                            [status]="form.Password.invalid && submitted ? 'danger' : 'basic'" maxlength="30" />
+                        <div class="input-group-append">
+                            <span class="input-group-text"
+                                style="padding: 0;background-color:#F7F9FC; border-color: #E4E9F2; ">
+                                <button class="shadow-none" nbButton type="button" (click)="toggleShowPassword()"
+                                    size="small" style="background-color:#F7F9FC ; border-color: #F7F9FC;">
+                                    <nb-icon [icon]="isShowPassword ? 'eye-outline' : 'eye-off-2-outline'" pack="eva"
+                                        [attr.aria-label]="isShowPassword ? 'hide password' : 'show password'">
+                                    </nb-icon>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                    <ng-container *ngIf="submitted && form.Password.errors">
+                        <p class="caption status-danger" *ngIf="form.Password.errors?.required">
+                            *Required!
+                        </p>
+                        <p class="caption status-danger" *ngIf="form.Password.errors?.pattern">
+                            *At least 8 characters in length, Lowercase letters, Uppercase letters, Numbers, Special
+                            characters(@$!%*?#&)
+                        </p>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="form-group row" style="height:60px;">
+                <label for="inputEmail1" class="label col-sm-4 col-form-label">Re-Password</label>
+                <div class="col-sm-8">
+                    <div class="input-group ">
+                        <input nbInput formControlName="ReEnterPassword" name="ReEnterPassword"
+                            [type]="isShowReEnterPassword ? 'text' : 'Password'" id="input-password"
+                            class="form-control size-large shadow-none" style="border-radius: 2px 0px 0px 2px"
+                            [status]="form.ReEnterPassword.invalid && submitted ? 'danger' : 'basic'" maxlength="30" />
+                        <div class="input-group-append">
+                            <span class="input-group-text"
+                                style="padding: 0;background-color:#F7F9FC; border-color: #E4E9F2; ">
+                                <button class="shadow-none" nbButton type="button" (click)="toggleShowReEnterPassword()"
+                                    size="small" style="background-color:#F7F9FC ; border-color: #F7F9FC;">
+                                    <nb-icon [icon]="isShowReEnterPassword ? 'eye-outline' : 'eye-off-2-outline'"
+                                        pack="eva"
+                                        [attr.aria-label]="isShowReEnterPassword ? 'hide password' : 'show password'">
+                                    </nb-icon>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                    <ng-container *ngIf="submitted && form.ReEnterPassword.errors">
+                        <p class="caption status-danger" *ngIf="form.ReEnterPassword.errors?.required">
+                            *Required!
+                        </p>
+                        <p class="caption status-danger" *ngIf="form.ReEnterPassword.errors?.mustMatch">
+                            *Passwords must match!
+                        </p>
+                        <p class="caption status-danger" *ngIf="form.ReEnterPassword.errors?.pattern">
+                            *At least 8 characters in length, Lowercase letters, Uppercase letters, Numbers, Special
+                            characters(@$!%*?#&)
+                        </p>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="form-group row" style="height:60px;">
+                <label for="inputEmail1" class="label col-sm-4 col-form-label">Role</label>
+                <div class="col-sm-8">
+                    <nb-select formControlName="Role" [status]="form.Role.invalid && submitted? 'danger' : ''"
+                        style="width: 100%; max-width: 100%;">
+                        <nb-option *ngFor="let e of roles" [value]="e.value"> {{ e.name }} </nb-option>
+                            <!-- <nb-option value="MASTER ADMIN">
+                                MASTER ADMIN
+                            </nb-option> -->
+                        <!-- <nb-option value="ADMIN">
+                            ADMIN
+                        </nb-option>
+                        <nb-option value="NORMAL">
+                            NORMAL
+                        </nb-option> -->
+                    </nb-select>
+                    <ng-container *ngIf="submitted && form.Role.errors">
+                        <p class="caption status-danger" *ngIf="form.Role.errors?.required">
+                            *Required!
+                        </p>
+                        <p class="caption status-danger" *ngIf="form.Role.errors?.noPermission">
+                            *You have no permissions to assign roles. Please contact with administration!
+                        </p>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="form-group row" style="height:90px;">
+                <label for="inputEmail1" class="label col-sm-4 col-form-label">Status</label>
+                <div class="col-sm-8">
+                    <mat-radio-group formControlName="IsActive" style="display: flex; flex-direction: column;">
+                        <mat-radio-button value="true" color="primary" style="margin: 5px;">ACTIVE
+                        </mat-radio-button>
+                        <mat-radio-button value="false" color="primary" style="margin: 5px;">INACTIVE
+                        </mat-radio-button>
+                    </mat-radio-group>
+                    <ng-container *ngIf="submitted && form.IsActive.errors">
+                        <p class="caption status-danger" *ngIf="form.IsActive.errors?.required">
+                            *Required!
+                        </p>
+                    </ng-container>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="offset-sm-4 col-sm-8">
+                    <button nbButton fullWidth status="primary" type="submit" class="margin-top-small" size="large"
+                        style="text-transform: none;">
+                        Save
+                    </button>
+                </div>
+            </div>
+        </form>
+    </nb-card-body>
+</nb-card>

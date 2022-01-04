@@ -120,7 +120,7 @@ import {
     NbLayoutModule,
     NbAlertModule,
     NbChatModule,
-    NbDialogModule,
+    NbDialogModule.forRoot(),
     NbWindowModule,
     NgxSpinnerModule,
     NbMenuModule.forRoot(),
