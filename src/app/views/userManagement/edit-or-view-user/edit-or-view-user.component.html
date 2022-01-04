@@ -7,7 +7,7 @@
         </span>
     </nb-card-header>
     <nb-card-body>
-        <form [formGroup]="editStudentForm" (ngSubmit)="onSubmit()">
+        <form [formGroup]="editUserForm" (ngSubmit)="onSubmit()">
 
             <div class="form-group row" style="height:60px;">
                 <label for="inputEmail1" class="label col-sm-4 col-form-label">Student Name</label>
@@ -118,12 +118,12 @@
                 <div class="col-sm-8">
                     <ng-container *ngIf="action == 'view'">
                         <input type="text" nbInput fullWidth formControlName="" maxlength="30" style="text-indent: -9999em;
-              text-shadow : 9999em 0 0 #000; color:black" disabled
-                            [value]="editStudentForm.value.IsActive == 'true' ? 'ACTIVE' : 'INACTIVE'">
+              text-shadow : 9999em 0 0 #000; color:black"  [disabled]="true" 
+                            [value]="editUserForm.value.IsActive == 'true' ? 'ACTIVE' : 'INACTIVE'">
                     </ng-container>
                     <ng-container *ngIf="action == 'edit'">
                         <mat-radio-group formControlName="IsActive" style="display: flex; flex-direction: column;"
-                            [disabled]="action == 'view' ? '' : null">
+                            [disabled]="action == 'view' ? true : false">
                             <mat-radio-button value="true" color="primary" style="margin: 5px;">ACTIVE
                             </mat-radio-button>
                             <mat-radio-button value="false" color="primary" style="margin: 5px;">INACTIVE

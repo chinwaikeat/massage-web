@@ -16,7 +16,7 @@ export class SessionTimeoutModalComponent implements OnInit {
   dismiss() {
     this.ref.close();
   }
-  save(value){
+  save(value:any){
     this.ref.close(value);
   }
 }

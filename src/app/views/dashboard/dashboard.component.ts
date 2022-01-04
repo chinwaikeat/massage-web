@@ -18,6 +18,11 @@ export class DashboardComponent implements OnInit {
     title: 'Dashboard',
     icon: 'people-outline',
     link: '/dashboard/home',
+  },
+  {
+    title: 'User Management',
+    icon: 'people-outline',
+    link: '/dashboard/user',
   }];
  
   constructor(private storage: StorageService, private sidebarService: NbSidebarService,private router: Router,) { }

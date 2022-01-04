@@ -1,4 +1,3 @@
-<p>user-list works!</p>
 <nb-card status="info">
     <nb-card-header>
       <span class="subtitle">Student List</span><span style="margin-left: 0.5em;">
@@ -6,7 +5,7 @@
       </span>
     </nb-card-header>
     <nb-card-body>
-      <input type="file" id="input" (change)="excelRead($event)" accept=".xlsx, .xls, .csv" />
+      <!-- <input type="file" id="input" (change)="excelRead($event)" accept=".xlsx, .xls, .csv" /> -->
 
       <div class="table-responsive" style="width: max-content , auto !important;">
         <form [formGroup]="searchForm" (ngSubmit)="filterSubmit(true)">
@@ -87,7 +86,7 @@
           <ng-container matColumnDef="actions" >
             <th class="headerText" *matHeaderCellDef mat-header-cell style="padding-left:35px;">Actions</th>
             <td *matCellDef="let row" mat-cell (click)="$event.stopPropagation()">
-              <button nbButton ghost (click)="editUser(row)" status="primary" style="margin-right: 10px;">
+              <button nbButton ghost (click)="viewOrEditUserDetails(row, true)" status="primary" style="margin-right: 10px;">
                 <nb-icon icon="edit-outline"></nb-icon>
               </button>
               <!-- <button nbButton status="danger" class="btn btn-outline-secondary" mwlConfirmationPopover [popoverTitle]="popoverTitle"
@@ -100,7 +99,7 @@
   
             </td>
             <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
-            <tr *matRowDef="let row; columns: displayedColumns" mat-row (click)="viewStudentDetails(row)"
+            <tr *matRowDef="let row; columns: displayedColumns" mat-row (click)="viewOrEditUserDetails(row, false)"
               style="cursor: pointer;"></tr>
           </ng-container>
   

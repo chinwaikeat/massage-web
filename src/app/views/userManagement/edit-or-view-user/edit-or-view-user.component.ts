@@ -10,7 +10,7 @@ import { ToastService } from '../../../services/toastService/toast.service';
 @Component({
   selector: 'app-edit-or-view-user',
   templateUrl: './edit-or-view-user.component.html',
-  styleUrls: ['./edit-or-view-user.component.css']
+  styleUrls: ['./edit-or-view-user.component.scss']
 })
 export class EditOrViewUserComponent implements OnInit {
   @Input() eventData: any;

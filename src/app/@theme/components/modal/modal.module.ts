@@ -15,7 +15,6 @@ import { SessionTimeoutModalComponent } from './session-timeout-modal/session-ti
     NbCheckboxModule,
     NbButtonModule,
     NbCardModule,
-
   ],
   exports:[ConfirmationModalComponent, SessionTimeoutModalComponent],
   entryComponents:[ConfirmationModalComponent, SessionTimeoutModalComponent]

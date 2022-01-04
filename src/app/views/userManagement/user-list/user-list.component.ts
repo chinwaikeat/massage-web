@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, Optional, ViewChild } from '@angular/core';
 import { MatTableDataSource } from "@angular/material/table";
 import { DatePipe } from '@angular/common';
 import { MatPaginator } from "@angular/material/paginator";
@@ -17,7 +17,7 @@ import { EditOrViewUserComponent } from '../edit-or-view-user/edit-or-view-user.
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.css']
+  styleUrls: ['./user-list.component.scss']
 })
 export class UserListComponent implements OnInit {
   displayedColumns = ['no', 'studentName', 'className', 'status', 'createdAt', 'actions'];
@@ -43,7 +43,7 @@ export class UserListComponent implements OnInit {
     private storageService: StorageService, 
     private spinnerService: SpinnerService,
     private datePipe: DatePipe,
-    private dialogService: NbDialogService,
+    @Optional() private dialogService: NbDialogService,
     private toastService: ToastService,) {
       this.searchForm = this.formBuilder.group({
         StudentName: [null, Validators.maxLength(30)],
@@ -58,16 +58,31 @@ export class UserListComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  clearForm() {
+    let studentName = this.searchForm.value.StudentName;
+    let className = this.searchForm.value.ClassName;
+    let carPlateNo = this.searchForm.value.CarPlateNo;
+    let status = this.searchForm.value.IsActive;
+    let dateRange = this.searchForm.value.DateRange
+    if (status != null || studentName != null || className != null || carPlateNo != null || dateRange != null) {
+      this.paginator.firstPage();
+      this.searchForm.reset();
+      this.page = 0;
+      this.size = 10;
+      this.getUserData();
+    }
+  }
+
   addUser() {
     this.router.navigate(['/dashboard/user/add']);
   }
 
-  editUser(row:any) {
+  viewOrEditUserDetails(row:any, isEdit:boolean) {
     console.log(row);
     this.dialogService.open(EditOrViewUserComponent, {
       context: {
         eventData: row,
-        action: "edit"
+        action: isEdit ? "edit": "view"
       },
     }).onClose.subscribe(value => {
       if (value == 1) {
@@ -75,6 +90,7 @@ export class UserListComponent implements OnInit {
       }
     })
   }
+
 
   deleteUser(row:any) {
     this.dialogService.open(ConfirmationModalComponent, {

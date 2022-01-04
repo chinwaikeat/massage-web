@@ -19,6 +19,10 @@ import { SpinnerComponent } from './components/loading-spinner/spinner/spinner.c
 import { AddUserComponent } from './views/userManagement/add-user/add-user.component';
 import { UserListComponent } from './views/userManagement/user-list/user-list.component';
 import { EditOrViewUserComponent } from './views/userManagement/edit-or-view-user/edit-or-view-user.component';
+import { SatDatepickerModule, SatNativeDateModule, DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from 'saturn-datepicker';
+import { ModalModule } from './@theme/components/modal/modal.module';
+
+
 
 
 
@@ -32,6 +36,7 @@ import { EditOrViewUserComponent } from './views/userManagement/edit-or-view-use
     AddUserComponent,
     UserListComponent,
     EditOrViewUserComponent,
+   
   ],
   imports: [
     HttpClientModule,
@@ -40,14 +45,20 @@ import { EditOrViewUserComponent } from './views/userManagement/edit-or-view-use
     ThemeModule.forRoot(),
     BrowserAnimationsModule,
     MatModule,
+    SatDatepickerModule, 
+    SatNativeDateModule,
+    ModalModule
   ],
   exports: [
+    SatDatepickerModule, 
+    SatNativeDateModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   providers: [
     CookieService,
     SpinnerService, 
-    LayoutService],
+    LayoutService,
+   ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
