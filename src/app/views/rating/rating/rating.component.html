@@ -1,0 +1,73 @@
+<nb-card status="info">
+  <nb-card-header>
+    <span class="subtitle">Rating List</span>
+  </nb-card-header>
+  <nb-card-body>
+    <div class="table-responsive" style="width: max-content , auto !important;">
+      <form [formGroup]="searchForm" (ngSubmit)="filterSubmit(true)">
+        <div class="d-flex justify-content-between">
+          <div>
+            <mat-form-field style="margin-right: 20px;">
+              <mat-label>User Name</mat-label>
+              <input matInput placeholder="User Name" formControlName="UserName" maxlength="30">
+              <mat-error *ngIf="form.UserName.errors?.maxlength">Cannot exceed 30 characters.
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field style="margin-right: 20px;">
+              <mat-label>Rating</mat-label>
+              <mat-select formControlName="Rating">
+                <mat-option value="1">1</mat-option>
+                <mat-option value="2">2</mat-option>
+                <mat-option value="3">3</mat-option>
+                <mat-option value="4">4</mat-option>
+                <mat-option value="5">5</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <button mat-raised-button color="primary" type="submit" style="margin-right: 20px;">Apply</button>
+            <button mat-raised-button color="warn" type="button" (click)="clearForm()">Clear</button>
+          </div>
+
+        </div>
+
+      </form>
+
+      <table *ngIf="viewRating" [dataSource]="dataSource" mat-table matSort  style="width: -webkit-fill-available;">
+        <ng-container matColumnDef="no">
+          <th class="headerText" *matHeaderCellDef mat-header-cell>No</th>
+          <td *matCellDef="let i = index" mat-cell>
+            {{ i + (page*size) + 1 }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="userName">
+          <th class="headerText" *matHeaderCellDef mat-header-cell mat-sort-header sortActionDescription="Sort by userName">User Name</th>
+          <td *matCellDef="let row" mat-cell>{{ row.UserName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="rating">
+          <th class="headerText" *matHeaderCellDef mat-header-cell>Rating</th>
+          <td *matCellDef="let row" mat-cell>{{ row.Rating }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="createdAt">
+          <th class="headerText" *matHeaderCellDef mat-header-cell>Created At</th>
+          <td *matCellDef="let row" mat-cell>
+            {{ row.CreatedAt | date:'d MMMM y, h:mm a'}}
+          </td>
+        </ng-container>
+
+       
+        <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+          <tr *matRowDef="let row; columns: displayedColumns" mat-row (click)="viewRatingDetails(row, false)"
+            style="cursor: pointer;"></tr>
+
+      </table>
+      <mat-paginator #paginator (page)="onPaginateChange($event)" [length]="pageLength"
+        [pageSizeOptions]="pageSizeOptions" [pageSize]="size" showFirstLastButtons>
+      </mat-paginator>
+      <div *ngIf="!viewRating" class="container">
+        <h3>You don't have permission to view users!</h3>
+      </div>
+    </div>
+  </nb-card-body>
+</nb-card>

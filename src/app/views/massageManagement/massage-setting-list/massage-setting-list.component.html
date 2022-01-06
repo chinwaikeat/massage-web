@@ -1,7 +1,7 @@
 <nb-card status="info">
   <nb-card-header>
-    <span class="subtitle">User List</span><span style="margin-left: 0.5em;">
-      <nb-icon class="cursor-pointer" icon="plus-circle-outline" (click)="addUser()"></nb-icon>
+    <span class="subtitle">Massage Setting List</span><span style="margin-left: 0.5em;">
+      <nb-icon class="cursor-pointer" icon="plus-circle-outline" (click)="addMassageSetting()"></nb-icon>
     </span>
   </nb-card-header>
   <nb-card-body>
@@ -16,15 +16,21 @@
               </mat-error>
             </mat-form-field>
             <mat-form-field style="margin-right: 20px;">
-              <mat-label>Role</mat-label>
-              <mat-select formControlName="Role">
-                <ng-container *ngIf="role == 'MASTER ADMIN'">
-                  <mat-option value="MASTER ADMIN">MASTER ADMIN</mat-option>
-                </ng-container>
-                <mat-option value="MASTER_ADMIN">MASTER ADMIN</mat-option>
-                <mat-option value="NORMAL_ADMIN">ADMIN</mat-option>
-                <mat-option value="DOCTOR">DOCTOR</mat-option>
-                <mat-option value="USER">USER</mat-option>
+              <mat-label>Rating</mat-label>
+              <mat-select formControlName="Rating">
+                <mat-option value="1">1</mat-option>
+                <mat-option value="2">2</mat-option>
+                <mat-option value="3">3</mat-option>
+                <mat-option value="4">4</mat-option>
+                <mat-option value="5">5</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field style="margin-right: 20px;">
+              <mat-label>Type</mat-label>
+              <mat-select formControlName="Type">
+                <mat-option value="DOCTOR_RECOMMEND">DOCTOR RECOMMEND</mat-option>
+                <mat-option value="USER_CUSTOMIZE">USER CUSTOMIZE</mat-option>
+                <mat-option value="DEFAULT_SETTING">DEFAULT SETTING</mat-option>
               </mat-select>
             </mat-form-field>
             <mat-form-field style="margin-right: 20px;">
@@ -34,15 +40,6 @@
                 <mat-option value="false">INACTIVE</mat-option>
               </mat-select>
             </mat-form-field>
-            <mat-form-field style="margin-right: 20px;">
-              <mat-label>Choose a date</mat-label>
-              <input matInput (click)="dateRangePicker.open()" [satDatepicker]="dateRangePicker"
-                formControlName="DateRange" autocomplete="disabled" style="cursor: pointer; text-indent: -9999em;
-                       text-shadow : 9999em 0 0 #000;" readonly onkeydown="return false">
-              <sat-datepicker #dateRangePicker [rangeMode]="true">
-              </sat-datepicker>
-              <sat-datepicker-toggle matSuffix [for]="dateRangePicker"></sat-datepicker-toggle>
-            </mat-form-field>
             <button mat-raised-button color="primary" type="submit" style="margin-right: 20px;">Apply</button>
             <button mat-raised-button color="warn" type="button" (click)="clearForm()">Clear</button>
           </div>
@@ -51,7 +48,7 @@
 
       </form>
 
-      <table *ngIf="viewUser" [dataSource]="dataSource" mat-table style="width: -webkit-fill-available;">
+      <table *ngIf="viewMassageSetting" [dataSource]="dataSource" mat-table style="width: -webkit-fill-available;">
         <ng-container matColumnDef="no">
           <th class="headerText" *matHeaderCellDef mat-header-cell >No</th>
           <td *matCellDef="let i = index" mat-cell>
@@ -64,9 +61,14 @@
           <td *matCellDef="let row" mat-cell>{{ row.UserName }}</td>
         </ng-container>
 
-        <ng-container matColumnDef="role">
-          <th class="headerText" *matHeaderCellDef mat-header-cell>Role</th>
-          <td *matCellDef="let row" mat-cell>{{ row.Role }}</td>
+        <ng-container matColumnDef="rating">
+          <th class="headerText" *matHeaderCellDef mat-header-cell>Rating</th>
+          <td *matCellDef="let row" mat-cell>{{ row.Rating }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+          <th class="headerText" *matHeaderCellDef mat-header-cell>Type</th>
+          <td *matCellDef="let row" mat-cell>{{ row.Type }}</td>
         </ng-container>
 
         <ng-container matColumnDef="status">
@@ -92,7 +94,7 @@
                       <nb-icon icon="trash-2-outline"></nb-icon>
                     </button> -->
             <ng-container *ngIf="row.Role != 'MASTER ADMIN'">
-              <button nbButton ghost status="danger" (click)="deleteUser(row)">
+              <button nbButton ghost status="danger" (click)="deleteMassageSetting(row)">
                 <nb-icon icon="trash-2-outline"></nb-icon>
               </button>
             </ng-container>
@@ -106,7 +108,7 @@
       <mat-paginator #paginator (page)="onPaginateChange($event)" [length]="pageLength"
         [pageSizeOptions]="pageSizeOptions" [pageSize]="size" showFirstLastButtons>
       </mat-paginator>
-      <div *ngIf="!viewUser" class="container">
+      <div *ngIf="!viewMassageSetting" class="container">
         <h3>You don't have permission to view users!</h3>
       </div>
     </div>

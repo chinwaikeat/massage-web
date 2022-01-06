@@ -22,8 +22,32 @@ export class DashboardComponent implements OnInit {
   {
     title: 'User Management',
     icon: 'people-outline',
-    link: '/dashboard/user',
-  }];
+    children: [
+      {
+        icon: "person-add-outline",
+        title: 'Users',
+        link: '/dashboard/user',
+      },
+    ]
+  },
+  {
+    title: 'Massage Management',
+    icon: 'settings-2-outline',
+    children: [
+      {
+        icon: "options-outline",
+        title: 'Massage Setting',
+        link: '/dashboard/massageSetting',
+      },
+      {
+        icon: 'activity-outline',
+        title: 'User Rating',
+        link: '/dashboard/rating',
+      },
+    ]
+  },
+  
+];
  
   constructor(private storage: StorageService, private sidebarService: NbSidebarService,private router: Router,) { }
 

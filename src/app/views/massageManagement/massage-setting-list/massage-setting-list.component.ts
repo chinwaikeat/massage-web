@@ -12,17 +12,17 @@ import { ToastService } from '../../../services/toastService/toast.service';
 import { NbDialogService  } from '@nebular/theme';
 import { HttpParams } from '@angular/common/http';
 import { ConfirmationModalComponent } from '../../../@theme/components/modal/confirmation-modal/confirmation-modal.component';
-import { EditOrViewUserComponent } from '../edit-or-view-user/edit-or-view-user.component';
+import { ViewOrEditMassageSettingComponent } from '../view-or-edit-massage-setting/view-or-edit-massage-setting.component';
 
 @Component({
-  selector: 'app-user-list',
-  templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.scss']
+  selector: 'app-massage-setting-list',
+  templateUrl: './massage-setting-list.component.html',
+  styleUrls: ['./massage-setting-list.component.scss']
 })
-export class UserListComponent implements OnInit {
-  displayedColumns = ['no', 'userName', 'role', 'status', 'createdAt', 'actions'];
+export class MassageSettingListComponent implements OnInit {
+  displayedColumns = ['no', 'userName', 'rating','type', 'status', 'createdAt', 'actions'];
   dataSource = new MatTableDataSource();
-  viewUser = true;
+  viewMassageSetting = true;
 
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
@@ -37,13 +37,11 @@ export class UserListComponent implements OnInit {
   role: any;
 
   exampleData =  [
-    {  UserName: 'Pending', Role: 'Annual', Status: '1/10/2020', CreatedAt: '1/10/2020'},
-    
+    {  UserName: 'Chin', Rating: '5', Type: 'USER_CUSTOMIZE', Status: 'ACTIVE', CreatedAt: '1/10/2020'},
   ];
 
   userData: any;
-  constructor( 
-    private router: Router,
+  constructor( private router: Router,
     private formBuilder: FormBuilder,
     private apiService: ApiService,
     private storageService: StorageService, 
@@ -53,17 +51,14 @@ export class UserListComponent implements OnInit {
     private toastService: ToastService,) {
       this.searchForm = this.formBuilder.group({
         UserName: [null, Validators.maxLength(30)],
-        Role: [null],
-        CarPlateNo: [null],
+        Rating: [null],
+        Type: [null],
         IsActive: [null],
-        DateRange: [],
       });
      }
 
   ngOnInit(): void {
-   
     this.dataSource.data = this.exampleData;
-
   }
 
   filterSubmit(clear: any) {
@@ -74,23 +69,22 @@ export class UserListComponent implements OnInit {
     if (this.searchForm.valid && this.searchForm.errors == null) {
       
       let userName = this.searchForm.value.UserName;
-      let role = this.searchForm.value.Role;
-      let status = this.searchForm.value.IsActive;
-      let dateRange = this.searchForm.value.DateRange
+      let rating = this.searchForm.value.Rating;
+      let type = this.searchForm.value.Type;
+      let status = this.searchForm.value.Status
       let params = new HttpParams();
 
-      if (status == null && userName == null && role == null && dateRange == null) {
+      if (type  == null && userName == null && rating == null && status == null) {
         console.log("empty")
         this.toastService.showToast('danger', 'Error', 'Please input input filter value');
       } else {
         this.spinnerService.activate();
         params = params.append('userName', userName ?? '');
-        params = params.append('role', role ?? '');
-        params = params.append('status', status ?? '');
+        params = params.append('rating', rating ?? '');
+        params = params.append('type', type  ?? '');
+        params = params.append('status', status );
         params = params.append('pageNumber', this.page.toString());
         params = params.append('pageSize', this.size.toString());
-        params = params.append('dateFrom', dateRange == null ? '' : this.datePipe.transform(this.searchForm.value.DateRange.begin, 'yyyy-MM-dd')!);
-        params = params.append('dateTo', dateRange == null ? '' : this.datePipe.transform(this.searchForm.value.DateRange.end, 'yyyy-MM-dd')!);
         this.apiService.get('api/user/getFilteredUser', params).subscribe(
           res => {
             this.spinnerService.deactivate();
@@ -124,10 +118,10 @@ export class UserListComponent implements OnInit {
 
   clearForm() {
     let userName = this.searchForm.value.UserName;
-    let role = this.searchForm.value.Role;
+    let rating = this.searchForm.value.Rating;
+    let type = this.searchForm.value.Type
     let status = this.searchForm.value.IsActive;
-    let dateRange = this.searchForm.value.DateRange
-    if(status != null || userName != null || role != null || dateRange != null){
+    if(status != null || userName != null || rating != null || type != null){
       this.paginator.firstPage();
       this.searchForm.reset();
       this.page = 0;
@@ -140,13 +134,13 @@ export class UserListComponent implements OnInit {
     let data = this.searchForm.value;
   }
 
-  addUser() {
-    this.router.navigate(['/dashboard/add']);
+  addMassageSetting() {
+    this.router.navigate(['/dashboard/addMassageSetting']);
   }
 
 
   viewOrEditUserDetails(row:any, isEdit :boolean){
-    this.dialogService.open(EditOrViewUserComponent, {
+    this.dialogService.open(ViewOrEditMassageSettingComponent, {
       context: {
         eventData: row,
         action: isEdit ? "edit": "view" 
@@ -158,7 +152,7 @@ export class UserListComponent implements OnInit {
     })
   }
 
-  deleteUser(row:any) {
+  deleteMassageSetting(row:any) {
     this.dialogService.open(ConfirmationModalComponent, {
       context: {
         title: "Delete Confirmation",
@@ -238,12 +232,13 @@ export class UserListComponent implements OnInit {
     this.size = event.pageSize;
     this.page = event.pageIndex;
     let userName = this.searchForm.value.UserName;
-    let role = this.searchForm.value.Role;
+    let rating = this.searchForm.value.Rating;
+    let type = this.searchForm.value.Type;
     let status = this.searchForm.value.IsActive;
-    let dateRange = this.searchForm.value.DateRange
+    
     let params = new HttpParams();
 
-    if (status == null && userName == null && role == null && dateRange == null) {
+    if (status == null && userName == null && rating == null && type == null) {
       this.getUserData();
     }else{
       this.filterSubmit(false);

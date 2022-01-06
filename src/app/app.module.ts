@@ -21,7 +21,12 @@ import { UserListComponent } from './views/userManagement/user-list/user-list.co
 import { EditOrViewUserComponent } from './views/userManagement/edit-or-view-user/edit-or-view-user.component';
 import { SatDatepickerModule, SatNativeDateModule, DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from 'saturn-datepicker';
 import { ModalModule } from './@theme/components/modal/modal.module';
-
+import { RatingComponent } from './views/rating/rating/rating.component';
+import { ViewRatingComponent } from './views/rating/view-rating/view-rating.component';
+import { MassageSettingListComponent } from './views/massageManagement/massage-setting-list/massage-setting-list.component';
+import { ViewOrEditMassageSettingComponent } from './views/massageManagement/view-or-edit-massage-setting/view-or-edit-massage-setting.component';
+import { AddMassageSettingComponent } from './views/massageManagement/add-massage-setting/add-massage-setting.component';
+import { ChartModule} from 'angular-highcharts';
 
 
 
@@ -36,7 +41,11 @@ import { ModalModule } from './@theme/components/modal/modal.module';
     AddUserComponent,
     UserListComponent,
     EditOrViewUserComponent,
-   
+    RatingComponent,
+    ViewRatingComponent,
+    MassageSettingListComponent,
+    ViewOrEditMassageSettingComponent,
+    AddMassageSettingComponent,
   ],
   imports: [
     HttpClientModule,
@@ -47,7 +56,8 @@ import { ModalModule } from './@theme/components/modal/modal.module';
     MatModule,
     SatDatepickerModule, 
     SatNativeDateModule,
-    ModalModule
+    ModalModule,
+    ChartModule
   ],
   exports: [
     SatDatepickerModule, 

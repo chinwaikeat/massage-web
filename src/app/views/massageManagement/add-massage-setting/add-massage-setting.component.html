@@ -1,0 +1,100 @@
+<nb-card status="info" class="position-center" style="max-width: 600px;">
+    <nb-card-header>
+        <span>
+            <nb-icon class="cursor-pointer" (click)="goback()" icon="arrow-back-outline"></nb-icon>
+        </span>
+        <span class="subtitle" style="margin-left: 0.5em;">Add Massage Setting</span>
+    </nb-card-header>
+    <nb-card-body>
+        <form [formGroup]="addMassageSettingForm" (ngSubmit)="onSubmit()">
+
+           
+            <div class="form-group row" style="height:60px;">
+                <label for="inputEmail1" class="label col-sm-4 col-form-label">Type</label>
+                <div class="col-sm-8">
+                    <input [status]="form.Type.invalid && submitted? 'danger' : 'basic'" type="text" nbInput
+                        fullWidth formControlName="Type" style="color:black" />
+                    <ng-container *ngIf="submitted && form.Type.errors">
+                        <p class="caption status-danger" *ngIf="form.Type.errors?.required">
+                            *Required!
+                        </p>
+                    </ng-container>
+                </div>
+            </div>
+            
+            <div class="form-group row" style="height:90px;">
+                <label for="inputEmail1" class="label col-sm-4 col-form-label">Status</label>
+                <div class="col-sm-8">
+                    <mat-radio-group formControlName="IsActive" style="display: flex; flex-direction: column;">
+                        <mat-radio-button value="true" color="primary" style="margin: 5px;">ACTIVE
+                        </mat-radio-button>
+                        <mat-radio-button value="false" color="primary" style="margin: 5px;">INACTIVE
+                        </mat-radio-button>
+                    </mat-radio-group>
+                    <ng-container *ngIf="submitted && form.IsActive.errors">
+                        <p class="caption status-danger" *ngIf="form.IsActive.errors?.required">
+                            *Required!
+                        </p>
+                    </ng-container>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label for="inputEmail1" class="label col-sm-4 col-form-label">Car Plates</label>
+                <div class="col-sm-8">
+                    <table style="width: 100%;
+                    border-radius: 5px;
+                    border-style: hidden; 
+                    box-shadow: 0 0 0 1px #666;">
+                        <tr style="background-color:#0095FF; color: white;">
+                            <th style="padding-left: 1em; padding-right: 1em; border-top-left-radius: 5px;">
+                                Car Plate
+                            </th>
+                            <th style="padding-left: 1em; padding-right: 1em; border-top-right-radius: 5px;">
+                                Action
+                            </th>
+                        </tr>
+                        <ng-container formArrayName="CarPlates">
+                            <ng-container *ngFor="
+                            let carPlate of carPlateControls.controls;
+                            index as i
+                          ">
+                                <ng-container *ngIf="carPlate.value.IsDeleted == false">
+                                    <ng-container [formGroupName]="i">
+                                        <tr>
+                                            <td class="col-sm-8" style="padding-left: 1em; padding-right: 1em;">
+                                                <input type="text" formControlName="CarPlateNo" nbInput />
+                                            </td>
+                                            <td class="col-sm-4" style="padding-left: 1em; padding-right: 1em;">
+                                                <button nbButton ghost status="danger" (click)="deleteCarPlate(i)">
+                                                    <nb-icon icon="trash-2-outline"></nb-icon>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+                                </ng-container>
+
+                            </ng-container>
+                        </ng-container>
+                    </table>
+                    <ng-container *ngIf="submitted && isCarPlateEmpty">
+                        <p class="caption status-danger">
+                            *Required!
+                        </p>
+                    </ng-container>
+                    <button class="mt-2" nbButton status="primary" type="button" (click)="addCarPlateItem()"
+                        size="medium">Add New
+                        Plate No</button>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="offset-sm-4 col-sm-8">
+                    <button nbButton fullWidth status="primary" type="submit" class="margin-top-small" size="large"
+                        style="text-transform: none;">
+                        Save
+                    </button>
+                </div>
+            </div>
+        </form>
+    </nb-card-body>
+</nb-card>
