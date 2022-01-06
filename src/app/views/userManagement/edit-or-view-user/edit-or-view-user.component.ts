@@ -66,6 +66,8 @@ export class EditOrViewUserComponent implements OnInit {
       console.log("test " + this.eventData );
       this.editUserForm.patchValue({
         UserId: this.eventData.UserId,
+        FirstName: this.eventData.FirstName,
+        LastName: this.eventData.LastName,
         UserName: this.eventData.UserName,
         Password: this.eventData.Password,
         ReEnterPassword: this.eventData.Password,

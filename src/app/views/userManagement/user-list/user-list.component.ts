@@ -162,7 +162,7 @@ export class UserListComponent implements OnInit {
 
 
   viewUserDetails(row:any){
-    console.log(row);
+    console.log(row + "///////////////");
     this.dialogService.open(EditOrViewUserComponent, {
       context: {
         eventData: row,
@@ -170,7 +170,7 @@ export class UserListComponent implements OnInit {
       },
     }).onClose.subscribe(value => {
       if(value == 1){
-        this.getUserData();
+       // this.getUserData();
       }
     })
   }

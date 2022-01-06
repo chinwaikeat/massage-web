@@ -12,7 +12,7 @@
                 <label for="inputEmail1" class="label col-sm-4 col-form-label">First Name</label>
                 <div class="col-sm-8">
                     <input [status]="form.FirstName.invalid && submitted? 'danger' : 'basic'" type="text" nbInput
-                        fullWidth formControlName="FistName" [attr.disabled]="action == 'view' ? '' : null"
+                        fullWidth formControlName="FirstName" [attr.disabled]="action == 'view' ? '' : null"
                         style="color:black" />
                     <ng-container *ngIf="submitted && form.FirstName.errors">
                         <p class="caption status-danger" *ngIf="form.FirstName.errors?.required">
@@ -135,7 +135,7 @@
                 <div class="col-sm-8">
                     <ng-container *ngIf="action == 'view'">
                         <input type="text" nbInput fullWidth formControlName="" maxlength="30" style="text-indent: -9999em;
-                            text-shadow : 9999em 0 0 #000; color:black" [disabled]="true" formControlName="Role">
+                            text-shadow : 9999em 0 0 #000; color:black" [attr.disabled]="action == 'view' ? '' : null" formControlName="Role">
                     </ng-container>
                     <ng-container *ngIf="action == 'edit'">
                         <nb-select formControlName="Role" [status]="form.Role.invalid && submitted? 'danger' : ''"
@@ -200,13 +200,13 @@
                 <label for="inputEmail1" class="label col-sm-4 col-form-label">Status</label>
                 <div class="col-sm-8">
                     <ng-container *ngIf="action == 'view'">
-                        <input type="text" nbInput fullWidth formControlName="" maxlength="30" style="text-indent: -9999em;
-              text-shadow : 9999em 0 0 #000; color:black" [disabled]="true"
+                        <input type="text" nbInput fullWidth formControlName="IsActive" maxlength="30" style="text-indent: -9999em;
+              text-shadow : 9999em 0 0 #000; color:black" [attr.disabled]="action == 'view' ? '' : null"
                             [value]="editUserForm.value.IsActive == 'true' ? 'ACTIVE' : 'INACTIVE'">
                     </ng-container>
                     <ng-container *ngIf="action == 'edit'">
                         <mat-radio-group formControlName="IsActive" style="display: flex; flex-direction: column;"
-                            [disabled]="action == 'view' ? true : false">
+                            [attr.disabled]="action == 'view' ? '' : null">
                             <mat-radio-button value="true" color="primary" style="margin: 5px;">ACTIVE
                             </mat-radio-button>
                             <mat-radio-button value="false" color="primary" style="margin: 5px;">INACTIVE
