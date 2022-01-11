@@ -3,78 +3,115 @@ import { Options } from 'highcharts';
 export const oneLineBar: Options = {
   chart: {
     type: 'bar',
-    height: 100,
-
+    height: 200,
   },
   title: {
-    text: 'Fruit Consumption'
+    text: 'Time allocate for massage',
+  },
+  subtitle: {
+    text: 'Source: WorldClimate.com',
   },
   xAxis: {
     visible: false,
-    categories: [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ],
   },
   yAxis: {
-    visible: false,
+    min: 0,
+    max: 30,
+    title: {
+      text: 'Total fruit consumption',
+    },
+    labels: {
+      style: {
+        fontSize: '8px'
+      },
+      formatter: function () {
+        return this.axis.defaultLabelFormatter.call(this) + 'min(s)';
+      },
+    },
   },
   legend: {
+    reversed: true,
     enabled: false,
   },
-  credits: {
-    enabled: false,
+  tooltip: {
+    formatter: function () {
+      return 'Duration: ' + this.point.y + '<br/>  Strength: ' + this.point.strength;
+    },
   },
   plotOptions: {
+    bar: {
+      // showInLegend: true,
+      dataLabels: {
+        enabled: true,
+        formatter: function () {
+          return this.point.y;
+        },
+        style: {
+          fontWeight: 'bold',
+        },
+      },
+    },
     series: {
-      stacking: "percent",
-      borderRadius: 5
-    } as any,
+      stacking: 'normal',
+      borderRadius: 5,
+    },
   },
-
   series: [
     {
-      type: 'bar',
-      color: '#506ef9',
-      data: [3],
-
+      name: 'John',
+      data: [{
+        y: 5,
+        strength: 50,
+    }],
     },
     {
-      name: "keat \n sasa" ,
-      type: 'bar',
-      color: '#E000FF',
-      data: [5],
-      
+      name: 'Jane',
+      data: [{
+        y: 2,
+        strength: 30,
+    }],
     },
     {
-      type: 'bar',
-      color: '#ccc',
-      data: [2]
+      name: 'Joe',
+      data: [{
+        y: 3,
+        strength: 20,
+    }],
     },
     {
-      type: 'bar',
-      color: '#F0FF00',
-      data: [10]
+      name: 'Jane',
+      data: [{
+        y: 4,
+        strength: 70,
+    }],
     },
     {
-      type: 'bar',
-      color: '#00FF00',
-      data: [5]
+      name: 'Jane',
+      data: [{
+        y: 1,
+        strength: 30,
+    }],
     },
     {
-      type: 'bar',
-      color: '#00FF00',
-      data: [5]
+      name: 'Jane',
+      data: [{
+        y: 6,
+        strength: 40,
+    }],
+    },
+    {
+      name: 'Jane',
+      data: [{
+        y: 4,
+        strength: 50,
+    }],
+    },
+    {
+      name: 'Jane',
+      data: [{
+        y: 5,
+        strength: 50,
+    }],
     },
   ],
 };
