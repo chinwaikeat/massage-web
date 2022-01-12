@@ -36,6 +36,7 @@ nb-card-body {
   .position-center {
     margin: 0 auto;
     width: 100%;
+    overflow: auto;
   }
   
   .cursor-pointer {
@@ -48,26 +49,28 @@ nb-card-body {
     color: white;
   }
 
-  table, th, td {
-    border: 1px solid black;
-    border-collapse: collapse;
-  }
+  h1,.btn-div{
+    text-align: center;
+}
 
-  .box {
-    border-radius: 50px;
-    height: 50px;
-    width: 50px;
-    border: 1px solid black;
-    margin-right : 5px;
-  }
-  
-  .red {
-    background-color: red;
-  }
+.counter{
+    max-width: 300px;
+    margin : 0 auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 4px;
+    color : #505e6c;
+    box-shadow: 1px 1px 5px rgba(0, 0,0,0.1);
+}
 
-  .inner-box {
-    padding-left: 5px;
-    display: table-cell; 
-    vertical-align: middle;
-  }
+// .counter .btn-primary{
+//     background : #f4476b;
+//     border:none;
+//     padding: 10px;
+//     margin-right: 10px;
+//     margin-top: 10px;
+// }
 
+.counter .btn-primary:hover{
+    background-color: #eb3b60;
+}

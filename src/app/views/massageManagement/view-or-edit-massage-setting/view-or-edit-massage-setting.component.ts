@@ -23,7 +23,8 @@ export class ViewOrEditMassageSettingComponent implements OnInit {
   isShowReEnterPassword: boolean = false;
   userRole: any;
   roles: any;
-  constructor(private formBuilder: FormBuilder,
+  constructor(
+    private formBuilder: FormBuilder,
     private router: Router,
     private apiService: ApiService,
     private toastService: ToastService,

@@ -8,12 +8,81 @@
     <nb-card-body>
         <form [formGroup]="addMassageSettingForm" (ngSubmit)="onSubmit()">
 
-           
+            <div class="bar" [chart]="oneLineBar"></div>
+
+            <div class="form-group row">
+                <div class="col-sm-12 mb-3 mt-4">
+                    <label for="inputEmail1" class="label col-form-label mr-3">Massage settings</label>
+                    <button nbButton status="primary" shape="round" size="small" outline
+                        (click)="addOrEditMassageSetting()">Add<nb-icon icon="plus-circle-outline"></nb-icon></button>
+
+                </div>
+
+                <div class="col-sm-12">
+                    <table style="width: 100%;
+                    border-radius: 5px;
+                    border-style: hidden; 
+                    box-shadow: 0 0 0 1px #666;">
+                        <tr style="background-color:#0095FF; color: white;">
+                            <th class="col-sm-9"
+                                style="padding-left: 1em; padding-right: 1em; border-top-left-radius: 5px; ">
+                                Details
+                            </th>
+                            <th class="col-sm-3"
+                                style="padding-left: 1em; padding-right: 1em; border-top-right-radius: 5px; text-Align: Center">
+                                Action
+                            </th>
+                        </tr>
+                        <ng-container formArrayName="MassageSettings">
+                            <ng-container *ngFor="
+                            let massageSetting of massageSettingControls.controls;
+                            index as i
+                          ">
+                                <ng-container *ngIf="massageSetting.value.IsDeleted == false">
+                                    <ng-container [formGroupName]="i">
+                                        <tr>
+                                            <td style="padding-left: 1em; padding-right: 1em; ">
+                                                <div class=" m-3" style="  display: table;">
+                                                    <div class='box' [style.background-color]='massageSetting.value.Color'></div>
+                                                    <div class='inner-box'>
+                                                        <div>Duration: {{massageSetting.value.Duration}}</div>
+                                                        <div>Strength: {{massageSetting.value.Strength}}</div>
+                                                    </div>
+                                                  
+                                                </div>
+                                            </td>
+                                            <td style="padding-left: 1em; padding-right: 1em; text-Align: Center">
+                                                <button nbButton ghost status="primary">
+                                                    <nb-icon icon="edit-outline"></nb-icon>
+                                                </button>
+                                                <button nbButton ghost status="danger" (click)="deleteCarPlate(i)">
+                                                    <nb-icon icon="trash-2-outline"></nb-icon>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </ng-container>
+                                </ng-container>
+
+                            </ng-container>
+                        </ng-container>
+                    </table>
+                    <ng-container *ngIf="submitted && isCarPlateEmpty">
+                        <p class="caption status-danger">
+                            *Required!
+                        </p>
+                    </ng-container>
+
+                </div>
+            </div>
+
             <div class="form-group row" style="height:60px;">
                 <label for="inputEmail1" class="label col-sm-4 col-form-label">Type</label>
                 <div class="col-sm-8">
-                    <input [status]="form.Type.invalid && submitted? 'danger' : 'basic'" type="text" nbInput
-                        fullWidth formControlName="Type" style="color:black" />
+                    <nb-select formControlName="Type" [status]="form.Type.invalid && submitted? 'danger' : ''"
+                        style="width: 100%; max-width: 100%;">
+                        <nb-option *ngFor="let e of types" [value]="e.value"> {{ e.name }} </nb-option>
+
+                    </nb-select>
                     <ng-container *ngIf="submitted && form.Type.errors">
                         <p class="caption status-danger" *ngIf="form.Type.errors?.required">
                             *Required!
@@ -21,7 +90,7 @@
                     </ng-container>
                 </div>
             </div>
-            
+
             <div class="form-group row" style="height:90px;">
                 <label for="inputEmail1" class="label col-sm-4 col-form-label">Status</label>
                 <div class="col-sm-8">
@@ -39,54 +108,6 @@
                 </div>
             </div>
 
-            <div class="form-group row">
-                <label for="inputEmail1" class="label col-sm-4 col-form-label">Car Plates</label>
-                <div class="col-sm-8">
-                    <table style="width: 100%;
-                    border-radius: 5px;
-                    border-style: hidden; 
-                    box-shadow: 0 0 0 1px #666;">
-                        <tr style="background-color:#0095FF; color: white;">
-                            <th style="padding-left: 1em; padding-right: 1em; border-top-left-radius: 5px;">
-                                Car Plate
-                            </th>
-                            <th style="padding-left: 1em; padding-right: 1em; border-top-right-radius: 5px;">
-                                Action
-                            </th>
-                        </tr>
-                        <ng-container formArrayName="CarPlates">
-                            <ng-container *ngFor="
-                            let carPlate of carPlateControls.controls;
-                            index as i
-                          ">
-                                <ng-container *ngIf="carPlate.value.IsDeleted == false">
-                                    <ng-container [formGroupName]="i">
-                                        <tr>
-                                            <td class="col-sm-8" style="padding-left: 1em; padding-right: 1em;">
-                                                <input type="text" formControlName="CarPlateNo" nbInput />
-                                            </td>
-                                            <td class="col-sm-4" style="padding-left: 1em; padding-right: 1em;">
-                                                <button nbButton ghost status="danger" (click)="deleteCarPlate(i)">
-                                                    <nb-icon icon="trash-2-outline"></nb-icon>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </ng-container>
-                                </ng-container>
-
-                            </ng-container>
-                        </ng-container>
-                    </table>
-                    <ng-container *ngIf="submitted && isCarPlateEmpty">
-                        <p class="caption status-danger">
-                            *Required!
-                        </p>
-                    </ng-container>
-                    <button class="mt-2" nbButton status="primary" type="button" (click)="addCarPlateItem()"
-                        size="medium">Add New
-                        Plate No</button>
-                </div>
-            </div>
             <div class="form-group row">
                 <div class="offset-sm-4 col-sm-8">
                     <button nbButton fullWidth status="primary" type="submit" class="margin-top-small" size="large"

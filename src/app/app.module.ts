@@ -27,6 +27,8 @@ import { MassageSettingListComponent } from './views/massageManagement/massage-s
 import { ViewOrEditMassageSettingComponent } from './views/massageManagement/view-or-edit-massage-setting/view-or-edit-massage-setting.component';
 import { AddMassageSettingComponent } from './views/massageManagement/add-massage-setting/add-massage-setting.component';
 import { ChartModule} from 'angular-highcharts';
+import { CounterDialogComponent } from './views/massageManagement/counter-dialog/counter-dialog.component';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 
 
@@ -46,6 +48,7 @@ import { ChartModule} from 'angular-highcharts';
     MassageSettingListComponent,
     ViewOrEditMassageSettingComponent,
     AddMassageSettingComponent,
+    CounterDialogComponent,
   ],
   imports: [
     HttpClientModule,
@@ -57,7 +60,8 @@ import { ChartModule} from 'angular-highcharts';
     SatDatepickerModule, 
     SatNativeDateModule,
     ModalModule,
-    ChartModule
+    ChartModule,
+    NgxSliderModule
   ],
   exports: [
     SatDatepickerModule, 

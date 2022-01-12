@@ -1,0 +1,46 @@
+<nb-card status="info" class="position-center" style=" height: 80vh;width: 500px;">
+    <nb-card-header>
+        <span class="subtitle" style="margin-left: 0.5em;">Edit</span>
+        <span style="float: right;">
+            <nb-icon class="cursor-pointer" (click)="close(2)" icon="close-circle-outline"></nb-icon>
+        </span>
+    </nb-card-header>
+    <nb-card-body>
+        <form [formGroup]="settingForm" (ngSubmit)="close(2)">
+            <div class="counter">
+                <h1>Duration {{settingForm.value.duration}}</h1>
+                <!-- <h1>{{counter}}</h1>
+                <div class="btn-div">
+                  <button class="btn btn-primary" (click)="count('+')">+</button>
+                  <button class="btn btn-primary" (click)="count('Reset')">Reset</button>
+                  <button class="btn btn-primary" (click)="count('-')">-</button>
+                </div> -->
+                <ngx-slider formControlName="duration" [options]="durationOptions"></ngx-slider>
+            </div>
+
+            <div class="counter mt-4 mb-4">
+                <h1>Strength {{settingForm.value.strength}}</h1>
+                <!-- <h1>{{counter}}</h1>
+                <div class="btn-div">
+                  <button class="btn btn-primary" (click)="count('+')">+</button>
+                  <button class="btn btn-primary" (click)="count('Reset')">Reset</button>
+                  <button class="btn btn-primary" (click)="count('-')">-</button>
+                </div> -->
+                <ngx-slider formControlName="strength" [options]="strengthLevelOptions"></ngx-slider>
+            </div>
+            <div class="form-group row">
+                <div class="position-center" style=" text-align: center;">
+                    <button nbButton status="primary" type="submit" size="medium" style="margin-right: 20px;">
+                        Save
+                    </button>
+                    <button nbButton status="danger" type="button" (click)="close(2)" size="medium">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </form>
+
+
+
+    </nb-card-body>
+</nb-card>
