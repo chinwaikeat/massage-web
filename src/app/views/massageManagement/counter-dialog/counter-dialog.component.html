@@ -1,12 +1,12 @@
 <nb-card status="info" class="position-center" style=" height: 80vh;width: 500px;">
     <nb-card-header>
-        <span class="subtitle" style="margin-left: 0.5em;">Edit</span>
+        <span class="subtitle" style="margin-left: 0.5em;">{{isEdit ? "Edit massage setting": "Massage setting"}}</span>
         <span style="float: right;">
-            <nb-icon class="cursor-pointer" (click)="close(2)" icon="close-circle-outline"></nb-icon>
+            <nb-icon class="cursor-pointer" (click)="close(true)" icon="close-circle-outline"></nb-icon>
         </span>
     </nb-card-header>
     <nb-card-body>
-        <form [formGroup]="settingForm" (ngSubmit)="close(2)">
+        <form [formGroup]="settingForm" (ngSubmit)="close(false)">
             <div class="counter">
                 <h1>Duration {{settingForm.value.duration}}</h1>
                 <!-- <h1>{{counter}}</h1>
@@ -33,7 +33,7 @@
                     <button nbButton status="primary" type="submit" size="medium" style="margin-right: 20px;">
                         Save
                     </button>
-                    <button nbButton status="danger" type="button" (click)="close(2)" size="medium">
+                    <button nbButton status="danger" type="button" (click)="close(true)" size="medium">
                         Close
                     </button>
                 </div>
