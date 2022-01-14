@@ -18,7 +18,7 @@ export class CounterDialogComponent implements OnInit {
   @Input() totalTimeLeft?: number;
   @Input() isEdit?: boolean;
   @Input() massageSetting: any;
-  @Input() massageSettingId?: number;
+  @Input() massageSettingIndex?: number;
   counter = 0;
   value: number = 1;
   settingForm!: FormGroup;
@@ -63,14 +63,16 @@ export class CounterDialogComponent implements OnInit {
   ngOnInit(): void {
     console.log('test ', this.settingForm);
     console.log('test ', this.totalTimeLeft);
-   
+
     this.initializeData();
   }
 
-  initializeData(){
-    this.durationOptions.ceil = this.isEdit ? this.totalTimeLeft + this.massageSetting.Duration : this.totalTimeLeft;
+  initializeData() {
+    this.durationOptions.ceil = this.isEdit
+      ? this.totalTimeLeft + this.massageSetting.Duration
+      : this.totalTimeLeft;
 
-    if(this.massageSetting != null){
+    if (this.massageSetting != null) {
       this.settingForm.patchValue({
         duration: this.massageSetting.Duration,
         strength: this.massageSetting.Strength,
@@ -82,9 +84,11 @@ export class CounterDialogComponent implements OnInit {
     if (isClose) {
       this.ref.close();
     } else {
-      this.ref.close({data:this.settingForm.value, isEdit: this.isEdit, massageSettingId: this.massageSettingId});
+      this.ref.close({
+        data: this.settingForm.value,
+        isEdit: this.isEdit,
+        massageSettingIndex: this.massageSettingIndex,
+      });
     }
   }
-
-
 }

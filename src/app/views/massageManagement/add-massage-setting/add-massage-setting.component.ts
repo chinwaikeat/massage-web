@@ -18,6 +18,8 @@ import { Chart } from 'angular-highcharts';
 import { CounterDialogComponent } from '../counter-dialog/counter-dialog.component';
 import { NbDialogService } from '@nebular/theme';
 import ConstructureLineBar from '../../../utils/lineBar';
+import * as Highcharts from 'highcharts';
+import { Options, SeriesLineOptions } from 'highcharts';
 
 @Component({
   selector: 'app-add-massage-setting',
@@ -28,11 +30,14 @@ export class AddMassageSettingComponent implements OnInit {
   addMassageSettingForm!: FormGroup;
   submitted: boolean = false;
   isCarPlateEmpty: boolean = false;
-  oneLineBar: any;
+  // oneLineBar: any;
+
   types: any;
   maxMinutes: number = 30;
   totalTimeLeft: number = 30;
   exampleData: any = [];
+  highcharts: any;
+
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -117,7 +122,70 @@ export class AddMassageSettingComponent implements OnInit {
     //   },
     // ];
 
-    this.oneLineBar = ConstructureLineBar([{ type: 'bar', data: [] }]);
+    // this.oneLineBar = ConstructureLineBar([{ type: 'bar', data: [] }]);
+
+    var options: Options = {
+      chart: {
+        type: 'bar',
+        height: 200,
+      },
+      title: {
+        text: 'Time allocate for massage',
+      },
+      subtitle: {
+        text: 'Source: WorldClimate.com',
+      },
+      xAxis: {
+        visible: false,
+      },
+      yAxis: {
+        reversedStacks: false,
+        min: 0,
+        max: 30,
+        title: {
+          text: 'Total time consumption',
+        },
+        labels: {
+          style: {
+            fontSize: '8px',
+          },
+          formatter: function () {
+            return this.axis.defaultLabelFormatter.call(this) + 'min(s)';
+          },
+        },
+      },
+      legend: {
+        reversed: true,
+        enabled: false,
+      },
+      tooltip: {
+        formatter: function () {
+          return this.point.series.userOptions.description;
+        },
+      },
+      plotOptions: {
+        bar: {
+          // showInLegend: true,
+          dataLabels: {
+            enabled: true,
+            formatter: function () {
+              return this.point.y;
+            },
+            style: {
+              fontWeight: 'bold',
+            },
+          },
+          borderRadius: 5,
+        },
+        series: {
+          stacking: 'normal',
+        },
+      },
+      series: [],
+    };
+    //
+    this.highcharts = Highcharts.chart('container', options);
+    console.log('test ', this.highcharts);
 
     //this.oneLineBar.ref$.subscribe((res:any)=>{ res.hideLoading(); })
     // this.oneLineBar.ref$.subscribe((res:any)=>{ res.showLoading(); })
@@ -134,7 +202,7 @@ export class AddMassageSettingComponent implements OnInit {
   addOrEditMassageSetting(
     isEdit: boolean,
     massageSetting: any,
-    massageSettingId: number
+    massageSettingIndex: number
   ) {
     if (this.totalTimeLeft <= 0 && !isEdit) {
       this.toastService.showToast('danger', 'Error', 'Reach maximum time');
@@ -145,29 +213,50 @@ export class AddMassageSettingComponent implements OnInit {
             totalTimeLeft: this.totalTimeLeft,
             isEdit: isEdit,
             massageSetting: massageSetting,
-            massageSettingId: massageSettingId,
+            massageSettingIndex: massageSettingIndex,
           },
         })
         .onClose.subscribe((value) => {
           console.log('return value ', value);
           if (value) {
-            if (value.data.isEdit) {
+            if (value.isEdit) {
               this.massageSettingControls.controls[
-                value.data.massageSettingId
+                value.massageSettingIndex
               ].value.Duration = value.data.duration;
               this.massageSettingControls.controls[
-                value.data.massageSettingId
+                value.massageSettingIndex
               ].value.Strength = value.data.strength;
+              console.log("test -------- ",  this.massageSettingControls.controls)
 
-              var sum = this.massageSettingControls.controls.reduce(function (
-                sum,
-                currentValue
-              ) {
-                return sum + currentValue.value.Duration;
-              });
+              var totalMassageTime =
+                this.massageSettingControls.controls.reduce(function (
+                  totalSum,
+                  currentValue
+                ) {
+                
+                  return totalSum + currentValue.value.Duration;
+                },0);
+
+              this.exampleData[value.massageSettingIndex].description =
+                'Duration: ' +
+                value.data.duration +
+                ' <br/>Strength: ' +
+                value.data.strength;
+
+              this.exampleData[value.massageSettingIndex].data[0].y =
+                value.data.duration;
+
+             
+              console.log("total time left " , totalMassageTime)
 
               //update used time
-              this.totalTimeLeft = 30 - Number(sum);
+              this.totalTimeLeft = 30 - totalMassageTime;
+
+               this.highcharts.update({
+                series: this.exampleData,
+              });
+
+              //  this.oneLineBar
             } else {
               var CustomColor = '#' + this.randomColor();
 
@@ -191,13 +280,8 @@ export class AddMassageSettingComponent implements OnInit {
                   },
                 ],
               });
-              console.log('test ', this.oneLineBar);
 
-              //  this.oneLineBar.options.series.setData(this.exampleData);
-              //  this.oneLineBar.init(this.exampleData);
-              //this.oneLineBar.destroy()
-
-              this.oneLineBar.addSeries({
+              this.highcharts.addSeries({
                 description:
                   'Duration: ' +
                   value.data.duration +
@@ -210,10 +294,11 @@ export class AddMassageSettingComponent implements OnInit {
                   },
                 ],
               });
+               //update used time
+            this.totalTimeLeft = this.totalTimeLeft - value.data.duration;
             }
 
-            //update used time
-            this.totalTimeLeft = this.totalTimeLeft - value.data.duration;
+           
           }
         });
     }
@@ -265,7 +350,7 @@ export class AddMassageSettingComponent implements OnInit {
         };
       });
 
-    this.oneLineBar = ConstructureLineBar(this.exampleData);
+    this.highcharts = ConstructureLineBar(this.exampleData);
   }
 
   addCarPlateItem() {
