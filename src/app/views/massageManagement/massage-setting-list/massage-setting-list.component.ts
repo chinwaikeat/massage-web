@@ -135,21 +135,27 @@ export class MassageSettingListComponent implements OnInit {
   }
 
   addMassageSetting() {
-    this.router.navigate(['/dashboard/addMassageSetting']);
+   // this.router.navigate(['/dashboard/addMassageSetting']);
+   this.router.navigate(['/dashboard/addMassageSetting'], { queryParams: { foo: 'bar', name: 'Chin ****************'} });
   }
 
 
   viewOrEditUserDetails(row:any, isEdit :boolean){
-    this.dialogService.open(ViewOrEditMassageSettingComponent, {
-      context: {
-        eventData: row,
-        action: isEdit ? "edit": "view" 
-      },
-    }).onClose.subscribe(value => {
-      if(value == 1){
-       // this.getUserData();
-      }
-    })
+    // this.dialogService.open(ViewOrEditMassageSettingComponent, {
+    //   context: {
+    //     eventData: row,
+    //     action: isEdit ? "edit": "view" 
+    //   },
+    // }).onClose.subscribe(value => {
+    //   if(value == 1){
+    //    // this.getUserData();
+    //   }
+    // })
+  //   this.router.navigateByUrl('/dashboard/addMassageSetting',  {
+  //     state: { foo: 'bar', name: 'Chin ****************'}
+  // });
+
+  this.router.navigate(['/dashboard/addMassageSetting'], { queryParams: { foo: 'bar', name: 'Chin ****************'} });
   }
 
   deleteMassageSetting(row:any) {

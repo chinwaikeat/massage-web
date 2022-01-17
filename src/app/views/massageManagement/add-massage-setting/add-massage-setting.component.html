@@ -3,7 +3,7 @@
         <span>
             <nb-icon class="cursor-pointer" (click)="goback()" icon="arrow-back-outline"></nb-icon>
         </span>
-        <span class="subtitle" style="margin-left: 0.5em;">Add Massage Setting</span>
+        <span class="subtitle" style="margin-left: 0.5em;">{{isEdit ? "Edit massage setting": "Add Massage Setting"}}</span>
     </nb-card-header>
     <nb-card-body>
         <form [formGroup]="addMassageSettingForm" (ngSubmit)="onSubmit()">
@@ -56,7 +56,7 @@
                                                 <button nbButton ghost status="primary" (click)="addOrEditMassageSetting(true, massageSetting.value, i)">
                                                     <nb-icon icon="edit-outline"></nb-icon>
                                                 </button>
-                                                <button nbButton ghost status="danger" (click)="deleteSelectedMassageSetting(i)">
+                                                <button nbButton ghost status="danger" (click)="deleteSelectedMassageSetting(i, massageSetting.value.SeriesId)">
                                                     <nb-icon icon="trash-2-outline"></nb-icon>
                                                 </button>
                                             </td>

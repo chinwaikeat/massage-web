@@ -6,7 +6,7 @@ import {
   ValidatorFn,
   FormArray,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 //import { DataCommunicationService } from "../../../../services/data-com/data-communication.service";
 import { Subscription } from 'rxjs';
 import { ApiService } from '../../../services/apiService/api-service.service';
@@ -14,12 +14,13 @@ import { SpinnerService } from '../../../services/spinnerService/spinner.service
 import { ToastService } from '../../../services/toastService/toast.service';
 import { StorageService } from '../../../services/storageService/storage.service';
 import { passValidator } from '../../../utils/passwordValidators';
-import { Chart } from 'angular-highcharts';
 import { CounterDialogComponent } from '../counter-dialog/counter-dialog.component';
 import { NbDialogService } from '@nebular/theme';
 import ConstructureLineBar from '../../../utils/lineBar';
 import * as Highcharts from 'highcharts';
 import { Options, SeriesLineOptions } from 'highcharts';
+import { ConfirmationModalComponent } from '../../../@theme/components/modal/confirmation-modal/confirmation-modal.component';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-add-massage-setting',
@@ -27,20 +28,21 @@ import { Options, SeriesLineOptions } from 'highcharts';
   styleUrls: ['./add-massage-setting.component.scss'],
 })
 export class AddMassageSettingComponent implements OnInit {
+  @Input() isEdit?: boolean;
   addMassageSettingForm!: FormGroup;
   submitted: boolean = false;
   isCarPlateEmpty: boolean = false;
-  // oneLineBar: any;
 
   types: any;
   maxMinutes: number = 30;
   totalTimeLeft: number = 30;
-  exampleData: any = [];
+  tempHighchartData: any = [];
   highcharts: any;
 
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
+    private activateRouter:ActivatedRoute,
     private apiService: ApiService,
     private toastService: ToastService,
     private spinnerService: SpinnerService,
@@ -189,9 +191,18 @@ export class AddMassageSettingComponent implements OnInit {
 
     //this.oneLineBar.ref$.subscribe((res:any)=>{ res.hideLoading(); })
     // this.oneLineBar.ref$.subscribe((res:any)=>{ res.showLoading(); })
+
+    // console.log('>>authenticate-username:41:',
+    //     this.router.getCurrentNavigation()?.extras);
+
+    this.activateRouter.queryParams.subscribe(params => {
+      //this.userWithRole.user = JSON.parse(params["user"]);
+      console.log("test**** " , params)
+      console.log("test**** " , params['name'])
+    });
   }
 
-  randomColor() {
+  private randomColor() {
     return Math.floor(Math.random() * 16777215).toString(16);
   }
 
@@ -217,71 +228,63 @@ export class AddMassageSettingComponent implements OnInit {
           },
         })
         .onClose.subscribe((value) => {
-          console.log('return value ', value);
+          //show loading
+          this.highcharts.showLoading();
           if (value) {
             if (value.isEdit) {
+              //update form array data
               this.massageSettingControls.controls[
                 value.massageSettingIndex
               ].value.Duration = value.data.duration;
               this.massageSettingControls.controls[
                 value.massageSettingIndex
               ].value.Strength = value.data.strength;
-              console.log("test -------- ",  this.massageSettingControls.controls)
 
+              //update temp data
+              this.tempHighchartData[value.massageSettingIndex].description =
+                'Duration: ' +
+                value.data.duration +
+                ' <br/>Strength: ' +
+                value.data.strength;
+              this.tempHighchartData[value.massageSettingIndex].data[0].y =
+                value.data.duration;
+
+              //calculate total massage time
               var totalMassageTime =
                 this.massageSettingControls.controls.reduce(function (
                   totalSum,
                   currentValue
                 ) {
-                
                   return totalSum + currentValue.value.Duration;
-                },0);
+                },
+                0);
 
-              this.exampleData[value.massageSettingIndex].description =
-                'Duration: ' +
-                value.data.duration +
-                ' <br/>Strength: ' +
-                value.data.strength;
-
-              this.exampleData[value.massageSettingIndex].data[0].y =
-                value.data.duration;
-
-             
-              console.log("total time left " , totalMassageTime)
-
-              //update used time
+              //update used left
               this.totalTimeLeft = 30 - totalMassageTime;
 
-               this.highcharts.update({
-                series: this.exampleData,
+              //update chart data
+              this.highcharts.update({
+                series: this.tempHighchartData,
               });
-
-              //  this.oneLineBar
             } else {
+              //generate random color
               var CustomColor = '#' + this.randomColor();
+              //generate id for series
+              var seriesId = uuidv4();
 
+              //push form array to form
               this.massageSettingControls.push(
                 this.newMassageSetting(
+                  seriesId,
                   value.data.duration,
                   value.data.strength,
                   CustomColor
                 )
               );
-              this.exampleData.push({
-                description:
-                  'Duration: ' +
-                  value.data.duration +
-                  ' <br/>Strength: ' +
-                  value.data.strength,
-                color: CustomColor,
-                data: [
-                  {
-                    y: value.data.duration,
-                  },
-                ],
-              });
 
-              this.highcharts.addSeries({
+              //construct series object
+              var seriesObj = {
+                id: seriesId,
                 description:
                   'Duration: ' +
                   value.data.duration +
@@ -293,13 +296,18 @@ export class AddMassageSettingComponent implements OnInit {
                     y: value.data.duration,
                   },
                 ],
-              });
-               //update used time
-            this.totalTimeLeft = this.totalTimeLeft - value.data.duration;
+              };
+
+              //add data to chart and temp
+              this.tempHighchartData.push(seriesObj);
+              this.highcharts.addSeries(seriesObj);
+
+              //update total time left
+              this.totalTimeLeft = this.totalTimeLeft - value.data.duration;
             }
-
-           
           }
+          //hide loading
+          this.highcharts.hideLoading();
         });
     }
   }
@@ -309,11 +317,13 @@ export class AddMassageSettingComponent implements OnInit {
   }
 
   private newMassageSetting(
+    seriesId: string,
     duration: number,
     strength: number,
     customColor: string
   ) {
     return this.formBuilder.group({
+      SeriesId: seriesId,
       Duration: duration,
       Strength: strength,
       Color: customColor,
@@ -321,97 +331,94 @@ export class AddMassageSettingComponent implements OnInit {
     });
   }
 
-  deleteSelectedMassageSetting(id: any) {
-    //this.carPlateControls.removeAt(id);
-    //update used time
-    this.totalTimeLeft =
-      this.totalTimeLeft +
-      this.massageSettingControls.controls[id].value.Duration;
-
-    this.massageSettingControls.controls[id].value.IsDeleted = true;
-
-    this.exampleData = this.massageSettingControls.controls
-      .filter((form) => {
-        return form.value.IsDeleted == false;
+  deleteSelectedMassageSetting(index: any, seriesId: number) {
+    this.dialogService
+      .open(ConfirmationModalComponent, {
+        context: {
+          title: 'Delete Confirmation',
+          message: 'Are you sure to delete ?',
+        },
       })
-      .map((item) => {
-        return {
-          description:
-            'Duration: ' +
-            item.value.Duration +
-            ' <br/>Strength: ' +
-            item.value.Strength,
-          color: item.value.Color,
-          data: [
-            {
-              y: item.value.Duration,
-            },
-          ],
-        };
+      .onClose.subscribe((value) => {
+        if (value == 1) {
+          //update used left
+          this.totalTimeLeft =
+            this.totalTimeLeft +
+            this.massageSettingControls.controls[index].value.Duration;
+
+          this.massageSettingControls.controls[index].value.IsDeleted = true;
+
+          this.tempHighchartData = this.massageSettingControls.controls
+            .filter((form) => {
+              return form.value.IsDeleted == false;
+            })
+            .map((item) => {
+              return {
+                description:
+                  'Duration: ' +
+                  item.value.Duration +
+                  ' <br/>Strength: ' +
+                  item.value.Strength,
+                color: item.value.Color,
+                data: [
+                  {
+                    y: item.value.Duration,
+                  },
+                ],
+              };
+            });
+            //remove specific data from highchart
+          this.highcharts.get(seriesId).remove();
+        }
       });
-
-    this.highcharts = ConstructureLineBar(this.exampleData);
   }
 
-  addCarPlateItem() {
-    this.massageSettingControls.push(this.newMassageSetting(0, 0, ''));
-  }
-
-  private checkCarPlateData() {
-    var test = this.massageSettingControls.controls.find(
-      (item) => item.value.IsDeleted == false
-    );
-    if (test != null) {
-      this.isCarPlateEmpty = false;
-    } else {
-      this.isCarPlateEmpty = true;
-    }
-  }
+ 
 
   onSubmit() {
-    this.spinnerService.activate();
-    // this.submitted = true;
-    if (
-      this.addMassageSettingForm.valid &&
-      this.addMassageSettingForm.errors == null
-    ) {
-      let data = this.addMassageSettingForm.value;
-      console.log(data);
-      this.apiService.post('api/user/add', data).subscribe(
-        (res) => {
-          this.spinnerService.deactivate();
-          if (res.isError) {
-            this.toastService.showToast('danger', 'Error', res.message);
-          } else if (res.isTokenExpired) {
-            this.toastService.showToast('danger', 'Error', res.message);
-            this.storageService.clear();
-            this.router.navigate(['/']);
-          } else {
-            this.toastService.showToast(
-              'success',
-              'Successful',
-              'New User added successfully.'
-            );
-            this.router.navigate(['/dashboard/user']);
-          }
-        },
-        (err) => {
-          this.spinnerService.deactivate();
-          if (!err.ok && err.status == 0) {
-            this.toastService.showToast('danger', 'Error', err.message);
-          } else {
-            this.toastService.showToast(
-              'danger',
-              'Error',
-              err.error?.message ?? 'Error connecting to server!'
-            );
-          }
-        }
-      );
-    } else {
-      console.log(this.addMassageSettingForm);
-      this.spinnerService.deactivate();
-    }
+    // this.spinnerService.activate();
+    // // this.submitted = true;
+    // if (
+    //   this.addMassageSettingForm.valid &&
+    //   this.addMassageSettingForm.errors == null
+    // ) {
+    //   let data = this.addMassageSettingForm.value;
+    //   console.log(data);
+    //   this.apiService.post('api/user/add', data).subscribe(
+    //     (res) => {
+    //       this.spinnerService.deactivate();
+    //       if (res.isError) {
+    //         this.toastService.showToast('danger', 'Error', res.message);
+    //       } else if (res.isTokenExpired) {
+    //         this.toastService.showToast('danger', 'Error', res.message);
+    //         this.storageService.clear();
+    //         this.router.navigate(['/']);
+    //       } else {
+    //         this.toastService.showToast(
+    //           'success',
+    //           'Successful',
+    //           'New User added successfully.'
+    //         );
+    //         this.router.navigate(['/dashboard/user']);
+    //       }
+    //     },
+    //     (err) => {
+    //       this.spinnerService.deactivate();
+    //       if (!err.ok && err.status == 0) {
+    //         this.toastService.showToast('danger', 'Error', err.message);
+    //       } else {
+    //         this.toastService.showToast(
+    //           'danger',
+    //           'Error',
+    //           err.error?.message ?? 'Error connecting to server!'
+    //         );
+    //       }
+    //     }
+    //   );
+    // } else {
+    //   console.log(this.addMassageSettingForm);
+    //   this.spinnerService.deactivate();
+    // }
   }
 
   get form() {
