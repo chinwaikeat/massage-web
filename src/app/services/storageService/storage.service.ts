@@ -12,6 +12,8 @@ export class StorageService {
   private tokenKey: string = 'accessToken';
   private roleKey: string = 'accessRole';
   private userNameKey: string = 'userName';
+  private userIdKey: string = 'userId';
+  
 
   constructor(
     private cookieService: CookieService,
@@ -99,6 +101,16 @@ export class StorageService {
   public getUserName(): any {
     const userName = this.cookieService.get(this.userNameKey);
     return userName;
+  }
+
+
+  public setUserId(userId: any){
+    this.cookieService ? this.cookieService.set(this.userIdKey, userId) : "";
+  }
+
+  public getUserId(): any {
+    const userId = this.cookieService.get(this.userIdKey);
+    return userId;
   }
 
 

@@ -11,13 +11,13 @@
           <div>
             <mat-form-field style="margin-right: 20px;">
               <mat-label>User Name</mat-label>
-              <input matInput placeholder="User Name" formControlName="UserName" maxlength="30">
-              <mat-error *ngIf="form.UserName.errors?.maxlength">Cannot exceed 30 characters.
+              <input matInput placeholder="User Name" formControlName="userName" maxlength="30">
+              <mat-error *ngIf="form.userName.errors?.maxlength">Cannot exceed 30 characters.
               </mat-error>
             </mat-form-field>
             <mat-form-field style="margin-right: 20px;">
               <mat-label>Role</mat-label>
-              <mat-select formControlName="Role">
+              <mat-select formControlName="role">
                 <ng-container *ngIf="role == 'MASTER ADMIN'">
                   <mat-option value="MASTER ADMIN">MASTER ADMIN</mat-option>
                 </ng-container>
@@ -29,7 +29,7 @@
             </mat-form-field>
             <mat-form-field style="margin-right: 20px;">
               <mat-label>Status</mat-label>
-              <mat-select formControlName="IsActive">
+              <mat-select formControlName="isActive">
                 <mat-option value="true">ACTIVE</mat-option>
                 <mat-option value="false">INACTIVE</mat-option>
               </mat-select>
@@ -37,7 +37,7 @@
             <mat-form-field style="margin-right: 20px;">
               <mat-label>Choose a date</mat-label>
               <input matInput (click)="dateRangePicker.open()" [satDatepicker]="dateRangePicker"
-                formControlName="DateRange" autocomplete="disabled" style="cursor: pointer; text-indent: -9999em;
+                formControlName="dateRange" autocomplete="disabled" style="cursor: pointer; text-indent: -9999em;
                        text-shadow : 9999em 0 0 #000;" readonly onkeydown="return false">
               <sat-datepicker #dateRangePicker [rangeMode]="true">
               </sat-datepicker>
@@ -61,23 +61,23 @@
 
         <ng-container matColumnDef="userName">
           <th class="headerText" *matHeaderCellDef mat-header-cell>User Name</th>
-          <td *matCellDef="let row" mat-cell>{{ row.UserName }}</td>
+          <td *matCellDef="let row" mat-cell>{{ row.userName }}</td>
         </ng-container>
 
         <ng-container matColumnDef="role">
           <th class="headerText" *matHeaderCellDef mat-header-cell>Role</th>
-          <td *matCellDef="let row" mat-cell>{{ row.Role }}</td>
+          <td *matCellDef="let row" mat-cell>{{ row.role }}</td>
         </ng-container>
 
         <ng-container matColumnDef="status">
           <th class="headerText" *matHeaderCellDef mat-header-cell>Status</th>
-          <td *matCellDef="let row" mat-cell>{{ row.IsActive ? "Active" : "Inactive" }}</td>
+          <td *matCellDef="let row" mat-cell>{{ row.isActive ? "Active" : "Inactive" }}</td>
         </ng-container>
 
         <ng-container matColumnDef="createdAt">
           <th class="headerText" *matHeaderCellDef mat-header-cell>Created At</th>
           <td *matCellDef="let row" mat-cell>
-            {{ row.CreatedAt | date:'d MMMM y, h:mm a'}}
+            {{ row.createdAt | date:'d MMMM y, h:mm a'}}
           </td>
         </ng-container>
 

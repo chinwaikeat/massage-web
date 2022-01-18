@@ -37,12 +37,13 @@ export class UserListComponent implements OnInit {
   role: any;
 
   exampleData =  [
-    {  UserName: 'Pending', Role: 'Annual', Status: '1/10/2020', CreatedAt: '1/10/2020'},
+    {  userName: 'Pending', role: 'Annual', status: '1/10/2020', createdAt: '1/10/2020'},
     
   ];
 
   userData: any;
   constructor( 
+    private storage: StorageService,
     private router: Router,
     private formBuilder: FormBuilder,
     private apiService: ApiService,
@@ -52,18 +53,16 @@ export class UserListComponent implements OnInit {
     @Optional() private dialogService: NbDialogService,
     private toastService: ToastService,) {
       this.searchForm = this.formBuilder.group({
-        UserName: [null, Validators.maxLength(30)],
-        Role: [null],
-        CarPlateNo: [null],
-        IsActive: [null],
-        DateRange: [],
+        userName: [null, Validators.maxLength(30)],
+        role: [null],
+        isActive: [null],
+        dateRange: [],
       });
      }
 
   ngOnInit(): void {
-   
-    this.dataSource.data = this.exampleData;
-
+    this.getUserListData();
+    //this.dataSource.data = this.exampleData;
   }
 
   filterSubmit(clear: any) {
@@ -73,10 +72,10 @@ export class UserListComponent implements OnInit {
     }
     if (this.searchForm.valid && this.searchForm.errors == null) {
       
-      let userName = this.searchForm.value.UserName;
-      let role = this.searchForm.value.Role;
-      let status = this.searchForm.value.IsActive;
-      let dateRange = this.searchForm.value.DateRange
+      let userName = this.searchForm.value.userName;
+      let role = this.searchForm.value.role;
+      let status = this.searchForm.value.isActive;
+      let dateRange = this.searchForm.value.dateRange
       let params = new HttpParams();
 
       if (status == null && userName == null && role == null && dateRange == null) {
@@ -85,12 +84,13 @@ export class UserListComponent implements OnInit {
       } else {
         this.spinnerService.activate();
         params = params.append('userName', userName ?? '');
+        params = params.append('userId', this.storage.getUserId());
         params = params.append('role', role ?? '');
         params = params.append('status', status ?? '');
+        params = params.append('dateFrom', dateRange == null ? '' : this.datePipe.transform(dateRange.begin, 'yyyy-MM-dd')!);
+        params = params.append('dateTo', dateRange == null ? '' : this.datePipe.transform(dateRange.end, 'yyyy-MM-dd')!);
         params = params.append('pageNumber', this.page.toString());
         params = params.append('pageSize', this.size.toString());
-        params = params.append('dateFrom', dateRange == null ? '' : this.datePipe.transform(this.searchForm.value.DateRange.begin, 'yyyy-MM-dd')!);
-        params = params.append('dateTo', dateRange == null ? '' : this.datePipe.transform(this.searchForm.value.DateRange.end, 'yyyy-MM-dd')!);
         this.apiService.get('api/user/getFilteredUser', params).subscribe(
           res => {
             this.spinnerService.deactivate();
@@ -132,7 +132,7 @@ export class UserListComponent implements OnInit {
       this.searchForm.reset();
       this.page = 0;
       this.size = 10;
-      this.getUserData();
+      this.getUserListData();
     }
   }
 
@@ -182,7 +182,7 @@ export class UserListComponent implements OnInit {
                 this.router.navigate(['/']);
               } else {
                 this.toastService.showToast("success", 'Successful', "Deleted successfully.");
-                this.getUserData();
+                this.getUserListData();
               }
             },
             (err) => {
@@ -200,12 +200,14 @@ export class UserListComponent implements OnInit {
   }
 
 
-  getUserData() {
+  getUserListData() {
     this.spinnerService.activate();
     let params = new HttpParams();
     params = params.append('pageNumber', this.page.toString());
     params = params.append('pageSize', this.size.toString());
-    this.apiService.get('api/user/getAll', params).subscribe(
+    params = params.append('userId', this.storage.getUserId());
+
+    this.apiService.get('api/user/getUserList', params).subscribe(
       res => {
         this.spinnerService.deactivate();
         console.log(res);
@@ -244,7 +246,7 @@ export class UserListComponent implements OnInit {
     let params = new HttpParams();
 
     if (status == null && userName == null && role == null && dateRange == null) {
-      this.getUserData();
+      this.getUserListData();
     }else{
       this.filterSubmit(false);
     }

@@ -49,6 +49,7 @@ export class LoginComponent implements OnInit {
           } else {
             this.toastService.showToast("success", 'Successful', "Autenticated");
             this.storage.setAccessToken(res.data.token);
+            this.storage.setUserId(res.data.user.userId);
             this.storage.setRole(res.data.user.role);
             this.storage.setUserName(res.data.user.userName);
             this.router.navigate(['dashboard/home']);
