@@ -3,7 +3,7 @@
         <span>
             <nb-icon class="cursor-pointer" (click)="goback()" icon="arrow-back-outline"></nb-icon>
         </span>
-        <span class="subtitle" style="margin-left: 0.5em;">{{isEdit ? "Edit massage setting": "Add Massage Setting"}}</span>
+        <span class="subtitle" style="margin-left: 0.5em;">{{pageEvent == "edit"? "Edit massage setting": "Add Massage Setting"}}</span>
     </nb-card-header>
     <nb-card-body>
         <form [formGroup]="addMassageSettingForm" (ngSubmit)="onSubmit()">

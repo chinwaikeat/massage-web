@@ -136,11 +136,11 @@ export class MassageSettingListComponent implements OnInit {
 
   addMassageSetting() {
    // this.router.navigate(['/dashboard/addMassageSetting']);
-   this.router.navigate(['/dashboard/addMassageSetting'], { queryParams: { foo: 'bar', name: 'Chin ****************'} });
+   this.router.navigate(['/dashboard/addMassageSetting'], { queryParams: { pageEvent: 'view', data: ''} });
   }
 
 
-  viewOrEditUserDetails(row:any, isEdit :boolean){
+  viewOrEditUserDetails(row:any){
     // this.dialogService.open(ViewOrEditMassageSettingComponent, {
     //   context: {
     //     eventData: row,
@@ -155,7 +155,7 @@ export class MassageSettingListComponent implements OnInit {
   //     state: { foo: 'bar', name: 'Chin ****************'}
   // });
 
-  this.router.navigate(['/dashboard/addMassageSetting'], { queryParams: { foo: 'bar', name: 'Chin ****************'} });
+  this.router.navigate(['/dashboard/addMassageSetting'], { queryParams: { pageEvent: 'edit', data: row} });
   }
 
   deleteMassageSetting(row:any) {

@@ -21,6 +21,8 @@ import * as Highcharts from 'highcharts';
 import { Options, SeriesLineOptions } from 'highcharts';
 import { ConfirmationModalComponent } from '../../../@theme/components/modal/confirmation-modal/confirmation-modal.component';
 import { v4 as uuidv4 } from 'uuid';
+import {Observable} from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-add-massage-setting',
@@ -28,7 +30,7 @@ import { v4 as uuidv4 } from 'uuid';
   styleUrls: ['./add-massage-setting.component.scss'],
 })
 export class AddMassageSettingComponent implements OnInit {
-  @Input() isEdit?: boolean;
+  pageEvent: any;
   addMassageSettingForm!: FormGroup;
   submitted: boolean = false;
   isCarPlateEmpty: boolean = false;
@@ -38,6 +40,7 @@ export class AddMassageSettingComponent implements OnInit {
   totalTimeLeft: number = 30;
   tempHighchartData: any = [];
   highcharts: any;
+  subscribe: any
 
   constructor(
     private formBuilder: FormBuilder,
@@ -54,6 +57,8 @@ export class AddMassageSettingComponent implements OnInit {
       MassageSettings: this.formBuilder.array([], Validators.required),
       IsActive: ['true', Validators.required],
     });
+
+    
   }
 
   ngOnInit(): void {
@@ -195,11 +200,17 @@ export class AddMassageSettingComponent implements OnInit {
     // console.log('>>authenticate-username:41:',
     //     this.router.getCurrentNavigation()?.extras);
 
-    this.activateRouter.queryParams.subscribe(params => {
+    this.subscribe =  this.activateRouter.queryParams.subscribe(params => {
       //this.userWithRole.user = JSON.parse(params["user"]);
       console.log("test**** " , params)
-      console.log("test**** " , params['name'])
+
+      this.pageEvent = params['pageEvent']
+      
     });
+
+   
+    
+  //  this.isEdit = false;
   }
 
   private randomColor() {
@@ -423,5 +434,9 @@ export class AddMassageSettingComponent implements OnInit {
 
   get form() {
     return this.addMassageSettingForm.controls;
+  }
+
+  ngOnDestroy() {
+    this.subscribe.unsubscribe();
   }
 }
