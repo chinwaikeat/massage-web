@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
   template: `
     <nb-layout windowMode>
       <nb-layout-header fixed>
-        <ngx-header></ngx-header>
+        <ngx-header>fff</ngx-header>
       </nb-layout-header>
 
       <nb-sidebar 

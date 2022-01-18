@@ -27,11 +27,11 @@
               <form class="" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
                 <div class="form-control-group " style="height:90px;">
                   <label class="label" for="input-Username" style="color: #3c4256 !important;">Username</label>
-                  <input nbInput fullWidth formControlName="Username" name="Username" id="input-Username"
+                  <input nbInput fullWidth formControlName="username" name="username" id="input-Username"
                     fieldSize="large" class="form-control size-large shadow-none" maxlength="30"
-                    [status]="form.invalid && (form.Username.dirty ||form.Username.touched) ? 'danger' : 'basic'" />
-                  <ng-container *ngIf="form.Username.invalid && (form.Username.dirty || form.Username.touched)">
-                    <p class="caption status-danger" *ngIf="form.Username.errors?.required">
+                    [status]="form.invalid && (form.username.dirty ||form.username.touched) ? 'danger' : 'basic'" />
+                  <ng-container *ngIf="form.username.invalid && (form.username.dirty || form.username.touched)">
+                    <p class="caption status-danger" *ngIf="form.username.errors?.required">
                       *Required!
                     </p>
                   </ng-container>
@@ -40,9 +40,9 @@
                 <div class="form-control-group" style="height:90px;">
                   <label class="label" for="input-Password" style="color: #3c4256 !important;">Password</label>
                   <div class="input-group ">
-                    <input nbInput formControlName="Password"  name="password" [type]="isShowPassword ? 'text' : 'Password'"
+                    <input nbInput formControlName="password"  name="password" [type]="isShowPassword ? 'text' : 'Password'"
                       id="input-password" fieldSize="small" class="form-control size-large shadow-none" style="border-radius: 2px 0px 0px 2px"
-                      [status]="form.Password.invalid && submitted ? 'danger' : 'basic'"  maxlength="30"/>
+                      [status]="form.password.invalid && submitted ? 'danger' : 'basic'"  maxlength="30"/>
                     <div class="input-group-append">
                       <span class="input-group-text" style="padding: 0;background-color:#F7F9FC; border-color: #E4E9F2; ">
                         <button class="shadow-none"   nbButton type="button" (click)="toggleShowPasswordText()" size="small" style="background-color:#F7F9FC ; border-color: #F7F9FC;">
@@ -53,8 +53,8 @@
                       </span>
                     </div>
                   </div>
-                  <ng-container *ngIf="form.Password.invalid && (form.Password.dirty || form.Password.touched)">
-                    <p class="caption status-danger" *ngIf="form.Password.errors?.required">
+                  <ng-container *ngIf="form.password.invalid && (form.password.dirty || form.password.touched)">
+                    <p class="caption status-danger" *ngIf="form.password.errors?.required">
                       *Required!
                     </p>
                   </ng-container>
