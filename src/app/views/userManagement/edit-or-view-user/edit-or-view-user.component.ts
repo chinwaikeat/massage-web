@@ -7,6 +7,7 @@ import { StorageService } from '../../../services/storageService/storage.service
 import { SpinnerService } from '../../../services/spinnerService/spinner.service';
 import { ToastService } from '../../../services/toastService/toast.service';
 import { passValidator } from '../../../utils/passwordValidators';
+import { ConstantValues } from 'src/app/utils/constantValue';
 
 @Component({
   selector: 'app-edit-or-view-user',
@@ -33,47 +34,43 @@ export class EditOrViewUserComponent implements OnInit {
     protected ref: NbDialogRef<EditOrViewUserComponent>) { 
       this.editUserForm = this.formBuilder.group(
         {
-          UserId: ['', Validators.required],
-          FirstName: ['', Validators.required],
-          LastName: ['', Validators.required],
-          Email : ['', Validators.required],
-          UserName: ['', Validators.required],
-          Password: ['',[ Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}')]],
-          ReEnterPassword: ['', [ Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}')]],
-          Role: ['', Validators.required],
-          IsActive: ['', Validators.required],
-          ModifiedAt: ['']
+          userId: ['', Validators.required],
+          firstName: ['', Validators.required],
+          lastName: ['', Validators.required],
+          email : ['', Validators.required],
+          userName: ['', Validators.required],
+          password: [''],
+          reEnterPassword: [''],
+          role: ['', Validators.required],
+          isActive: [true, Validators.required],
+          modifiedAt: ['']
         },
         {
-          validator: passValidator('Password', 'ReEnterPassword')
+          validator: passValidator('password', 'reEnterPassword')
       }
       );
     }
 
   ngOnInit(): void {  
-    this.roles = [
-    {"value":"MASTER_ADMIN","name": "MASTER ADMIN"}, 
-    {"value":"NORMAL_ADMIN","name": "NORMAL ADMIN"},
-    {"value":"DOCTOR","name": "DOCTOR"},
-    {"value":"USER","name": "USER"},
-  ];
+   
+  this.roles = ConstantValues.ROLES_LIST;
+  this.initializeData();
   }
 
   initializeData(){
     if(this.eventData == null){
       this.toastService.showToast('danger', 'Error', 'No Data Found');
     }else{
-      console.log("test " + this.eventData );
+      console.log("test ", this.eventData );
       this.editUserForm.patchValue({
-        UserId: this.eventData.UserId,
-        FirstName: this.eventData.FirstName,
-        LastName: this.eventData.LastName,
-        UserName: this.eventData.UserName,
-        Password: this.eventData.Password,
-        ReEnterPassword: this.eventData.Password,
-        Role: this.eventData.Role,
-        IsActive: this.eventData.IsActive.toString(),
-        ModifiedAt: this.eventData.ModifiedAt,
+        userId: this.eventData.userId,
+        firstName: this.eventData.firstName,
+        lastName: this.eventData.lastName,
+        userName: this.eventData.userName,
+        email: this.eventData.email,
+        role: this.eventData.role,
+        isActive:this.eventData.isActive,
+        modifiedAt: this.eventData.modifiedAt,
       });
     }
   }
@@ -82,13 +79,29 @@ export class EditOrViewUserComponent implements OnInit {
     this.ref.close(value);
   }
 
+  addAndRemoveValidator(value:any){
+    if(value){
+      this.editUserForm.controls['password'].setValidators([Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}')])
+      this.editUserForm.controls['password'].updateValueAndValidity();
+      this.editUserForm.controls['reEnterPassword'].setValidators([Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}')])
+      this.editUserForm.controls['reEnterPassword'].updateValueAndValidity();
+    }else{
+      this.editUserForm.controls['password'].clearValidators()
+      this.editUserForm.controls['password'].updateValueAndValidity();
+      this.editUserForm.controls['reEnterPassword'].clearValidators()
+      this.editUserForm.controls['reEnterPassword'].updateValueAndValidity();
+    }
+  }
+
+
+
   onSubmit() {
     this.submitted = true;
     this.spinnerService.activate();
     if (this.editUserForm.valid && this.editUserForm.errors == null) {
       let data = this.editUserForm.value;
       console.log(data);
-      this.apiService.put('api/user/update', data).subscribe(
+      this.apiService.put('api/user/webUpdate', data).subscribe(
         res => {
           this.spinnerService.deactivate();
           if (res.isError) {

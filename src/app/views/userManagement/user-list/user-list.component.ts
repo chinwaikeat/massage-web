@@ -84,7 +84,6 @@ export class UserListComponent implements OnInit {
       } else {
         this.spinnerService.activate();
         params = params.append('userName', userName ?? '');
-        params = params.append('userId', this.storage.getUserId());
         params = params.append('role', role ?? '');
         params = params.append('status', status ?? '');
         params = params.append('dateFrom', dateRange == null ? '' : this.datePipe.transform(dateRange.begin, 'yyyy-MM-dd')!);
@@ -123,10 +122,10 @@ export class UserListComponent implements OnInit {
   }
 
   clearForm() {
-    let userName = this.searchForm.value.UserName;
-    let role = this.searchForm.value.Role;
-    let status = this.searchForm.value.IsActive;
-    let dateRange = this.searchForm.value.DateRange
+    let userName = this.searchForm.value.userName;
+    let role = this.searchForm.value.role;
+    let status = this.searchForm.value.isActive;
+    let dateRange = this.searchForm.value.dateRange
     if(status != null || userName != null || role != null || dateRange != null){
       this.paginator.firstPage();
       this.searchForm.reset();
@@ -162,13 +161,13 @@ export class UserListComponent implements OnInit {
     this.dialogService.open(ConfirmationModalComponent, {
       context: {
         title: "Delete Confirmation",
-        message: "Are you sure delete user of " + row.UserName + "?",
+        message: "Are you sure delete user of " + row.userName + "?",
       },
     }).onClose.subscribe(value => {
       if (value == 1) {
         this.spinnerService.activate();
         let params = new HttpParams();
-        params = params.append('userId', row.UserId ?? '');
+        params = params.append('userIdToBeDelete', row.userId ?? '');
         this.apiService.actualDelete("api/user/delete", params)
           .subscribe(
             (res) => {
@@ -205,7 +204,6 @@ export class UserListComponent implements OnInit {
     let params = new HttpParams();
     params = params.append('pageNumber', this.page.toString());
     params = params.append('pageSize', this.size.toString());
-    params = params.append('userId', this.storage.getUserId());
 
     this.apiService.get('api/user/getUserList', params).subscribe(
       res => {

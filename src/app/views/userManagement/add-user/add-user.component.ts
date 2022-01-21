@@ -8,6 +8,7 @@ import { SpinnerService } from '../../../services/spinnerService/spinner.service
 import { ToastService } from '../../../services/toastService/toast.service';
 import { StorageService } from '../../../services/storageService/storage.service';
 import { passValidator } from '../../../utils/passwordValidators';
+import { ConstantValues } from '../../../utils/constantValue';
 
 @Component({
   selector: 'app-add-user',
@@ -31,32 +32,30 @@ export class AddUserComponent implements OnInit {
     private storageService: StorageService,) {
       this.addUserForm = this.formBuilder.group(
         {
-          FirstName: ['', Validators.required],
-          LastName: ['', Validators.required],
-          UserName: ['', Validators.required],
-          Email: ['', Validators.required],
-          Password: ['', [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}')]],
-          ReEnterPassword: ['', [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}')]],
-          Role: ['', Validators.required],
-          IsActive: ['true', Validators.required],
+          userId: [0],
+          firstName: ['', Validators.required],
+          lastName: ['', Validators.required],
+          userName: ['', Validators.required],
+          email: ['', Validators.required],
+          password: ['', [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}')]],
+          reEnterPassword: ['', [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}')]],
+          role: ['', Validators.required],
+          isActive: [true, Validators.required],
+          modifiedAt: [null]
         },
         {
-          validator: passValidator('Password', 'ReEnterPassword')
+          validator: passValidator('password', 'reEnterPassword')
         }
       );
      }
 
   ngOnInit(): void {
-    this.roles = [
-      {"value":"MASTER_ADMIN","name": "MASTER ADMIN"}, 
-      {"value":"NORMAL_ADMIN","name": "NORMAL ADMIN"},
-      {"value":"DOCTOR","name": "DOCTOR"},
-      {"value":"USER","name": "USER"},
-    ];
+    this.roles = ConstantValues.ROLES_LIST;
 
     // if(this.userRole == 'MASTER ADMIN'){
     //   this.roles.push({"value":"MASTER ADMIN","name": "MASTER ADMIN"})
     // }
+    
   }
 
   goback() {
@@ -69,7 +68,7 @@ export class AddUserComponent implements OnInit {
     if (this.addUserForm.valid && this.addUserForm.errors == null) {
       let data = this.addUserForm.value;
       console.log(data);
-      this.apiService.post('api/user/add', data).subscribe(
+      this.apiService.post('api/user/webAddUser', data).subscribe(
         res => {
           this.spinnerService.deactivate();
           if (res.isError) {

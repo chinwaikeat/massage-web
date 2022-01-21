@@ -12,10 +12,10 @@
             <div class="form-group row" style="height:60px;">
                 <label for="inputEmail1" class="label col-sm-4 col-form-label">First Name</label>
                 <div class="col-sm-8">
-                    <input [status]="form.FirstName.invalid && submitted? 'danger' : 'basic'" type="text" nbInput
-                        fullWidth formControlName="FirstName" style="color:black" />
-                    <ng-container *ngIf="submitted && form.FirstName.errors">
-                        <p class="caption status-danger" *ngIf="form.FirstName.errors?.required">
+                    <input [status]="form.firstName.invalid && submitted? 'danger' : 'basic'" type="text" nbInput
+                        fullWidth formControlName="firstName" style="color:black" />
+                    <ng-container *ngIf="submitted && form.firstName.errors">
+                        <p class="caption status-danger" *ngIf="form.firstName.errors?.required">
                             *Required!
                         </p>
                     </ng-container>
@@ -24,10 +24,10 @@
             <div class="form-group row" style="height:60px;">
                 <label for="inputEmail1" class="label col-sm-4 col-form-label">Last Name</label>
                 <div class="col-sm-8">
-                    <input [status]="form.LastName.invalid && submitted? 'danger' : 'basic'" type="text" nbInput
-                        fullWidth formControlName="LastName" style="color:black" />
-                    <ng-container *ngIf="submitted && form.LastName.errors">
-                        <p class="caption status-danger" *ngIf="form.LastName.errors?.required">
+                    <input [status]="form.lastName.invalid && submitted? 'danger' : 'basic'" type="text" nbInput
+                        fullWidth formControlName="lastName" style="color:black" />
+                    <ng-container *ngIf="submitted && form.lastName.errors">
+                        <p class="caption status-danger" *ngIf="form.lastName.errors?.required">
                             *Required!
                         </p>
                     </ng-container>
@@ -36,10 +36,10 @@
             <div class="form-group row" style="height:60px;">
                 <label for="inputEmail1" class="label col-sm-4 col-form-label">User Name</label>
                 <div class="col-sm-8">
-                    <input [status]="form.UserName.invalid && submitted? 'danger' : 'basic'" type="text" nbInput
-                        fullWidth formControlName="UserName" style="color:black" />
-                    <ng-container *ngIf="submitted && form.UserName.errors">
-                        <p class="caption status-danger" *ngIf="form.UserName.errors?.required">
+                    <input [status]="form.userName.invalid && submitted? 'danger' : 'basic'" type="text" nbInput
+                        fullWidth formControlName="userName" style="color:black" />
+                    <ng-container *ngIf="submitted && form.userName.errors">
+                        <p class="caption status-danger" *ngIf="form.userName.errors?.required">
                             *Required!
                         </p>
                     </ng-container>
@@ -48,11 +48,14 @@
             <div class="form-group row" style="height:60px;">
                 <label for="inputEmail1" class="label col-sm-4 col-form-label">Email</label>
                 <div class="col-sm-8">
-                    <input [status]="form.Email.invalid && submitted? 'danger' : 'basic'" type="text" nbInput
-                        fullWidth formControlName="Email" style="color:black" />
-                    <ng-container *ngIf="submitted && form.Email.errors">
-                        <p class="caption status-danger" *ngIf="form.Email.errors?.required">
+                    <input [status]="form.email.invalid && submitted? 'danger' : 'basic'" type="email" email="true" nbInput
+                        fullWidth formControlName="email" style="color:black" />
+                    <ng-container *ngIf="submitted && form.email.errors">
+                        <p class="caption status-danger" *ngIf="form.email.errors?.required">
                             *Required!
+                        </p>
+                        <p class="caption status-danger" *ngIf="form.email.errors?.email">
+                            Email format not correct
                         </p>
                     </ng-container>
                 </div>
@@ -61,10 +64,10 @@
                 <label for="inputEmail1" class="label col-sm-4 col-form-label">Password</label>
                 <div class="col-sm-8">
                     <div class="input-group ">
-                        <input nbInput formControlName="Password" name="Password"
+                        <input nbInput formControlName="password" name="password"
                             [type]="isShowPassword ? 'text' : 'Password'" id="input-password"
                             class="form-control size-large shadow-none" style="border-radius: 2px 0px 0px 2px"
-                            [status]="form.Password.invalid && submitted ? 'danger' : 'basic'" maxlength="30" />
+                            [status]="form.password.invalid && submitted ? 'danger' : 'basic'" maxlength="30" />
                         <div class="input-group-append">
                             <span class="input-group-text"
                                 style="padding: 0;background-color:#F7F9FC; border-color: #E4E9F2; ">
@@ -77,11 +80,11 @@
                             </span>
                         </div>
                     </div>
-                    <ng-container *ngIf="submitted && form.Password.errors">
-                        <p class="caption status-danger" *ngIf="form.Password.errors?.required">
+                    <ng-container *ngIf="submitted && form.password.errors">
+                        <p class="caption status-danger" *ngIf="form.password.errors?.required">
                             *Required!
                         </p>
-                        <p class="caption status-danger" *ngIf="form.Password.errors?.pattern">
+                        <p class="caption status-danger" *ngIf="form.password.errors?.pattern">
                             *At least 8 characters in length, Lowercase letters, Uppercase letters, Numbers, Special
                             characters(@$!%*?#&)
                         </p>
@@ -92,10 +95,10 @@
                 <label for="inputEmail1" class="label col-sm-4 col-form-label">Re-Password</label>
                 <div class="col-sm-8">
                     <div class="input-group ">
-                        <input nbInput formControlName="ReEnterPassword" name="ReEnterPassword"
+                        <input nbInput formControlName="reEnterPassword" name="reEnterPassword"
                             [type]="isShowReEnterPassword ? 'text' : 'Password'" id="input-password"
                             class="form-control size-large shadow-none" style="border-radius: 2px 0px 0px 2px"
-                            [status]="form.ReEnterPassword.invalid && submitted ? 'danger' : 'basic'" maxlength="30" />
+                            [status]="form.reEnterPassword.invalid && submitted ? 'danger' : 'basic'" maxlength="30" />
                         <div class="input-group-append">
                             <span class="input-group-text"
                                 style="padding: 0;background-color:#F7F9FC; border-color: #E4E9F2; ">
@@ -109,14 +112,14 @@
                             </span>
                         </div>
                     </div>
-                    <ng-container *ngIf="submitted && form.ReEnterPassword.errors">
-                        <p class="caption status-danger" *ngIf="form.ReEnterPassword.errors?.required">
+                    <ng-container *ngIf="submitted && form.reEnterPassword.errors">
+                        <p class="caption status-danger" *ngIf="form.reEnterPassword.errors?.required">
                             *Required!
                         </p>
-                        <p class="caption status-danger" *ngIf="form.ReEnterPassword.errors?.mustMatch">
+                        <p class="caption status-danger" *ngIf="form.reEnterPassword.errors?.mustMatch">
                             *Passwords must match!
                         </p>
-                        <p class="caption status-danger" *ngIf="form.ReEnterPassword.errors?.pattern">
+                        <p class="caption status-danger" *ngIf="form.reEnterPassword.errors?.pattern">
                             *At least 8 characters in length, Lowercase letters, Uppercase letters, Numbers, Special
                             characters(@$!%*?#&)
                         </p>
@@ -126,7 +129,7 @@
             <div class="form-group row" style="height:60px;">
                 <label for="inputEmail1" class="label col-sm-4 col-form-label">Role</label>
                 <div class="col-sm-8">
-                    <nb-select formControlName="Role" [status]="form.Role.invalid && submitted? 'danger' : ''"
+                    <nb-select formControlName="role" [status]="form.role.invalid && submitted? 'danger' : ''"
                         style="width: 100%; max-width: 100%;">
                         <nb-option *ngFor="let e of roles" [value]="e.value"> {{ e.name }} </nb-option>
                             <!-- <nb-option value="MASTER ADMIN">
@@ -139,11 +142,11 @@
                             NORMAL
                         </nb-option> -->
                     </nb-select>
-                    <ng-container *ngIf="submitted && form.Role.errors">
-                        <p class="caption status-danger" *ngIf="form.Role.errors?.required">
+                    <ng-container *ngIf="submitted && form.role.errors">
+                        <p class="caption status-danger" *ngIf="form.role.errors?.required">
                             *Required!
                         </p>
-                        <p class="caption status-danger" *ngIf="form.Role.errors?.noPermission">
+                        <p class="caption status-danger" *ngIf="form.role.errors?.noPermission">
                             *You have no permissions to assign roles. Please contact with administration!
                         </p>
                     </ng-container>
@@ -152,14 +155,14 @@
             <div class="form-group row" style="height:90px;">
                 <label for="inputEmail1" class="label col-sm-4 col-form-label">Status</label>
                 <div class="col-sm-8">
-                    <mat-radio-group formControlName="IsActive" style="display: flex; flex-direction: column;">
-                        <mat-radio-button value="true" color="primary" style="margin: 5px;">ACTIVE
+                    <mat-radio-group formControlName="isActive" style="display: flex; flex-direction: column;">
+                        <mat-radio-button [value]="true" color="primary" style="margin: 5px;">ACTIVE
                         </mat-radio-button>
-                        <mat-radio-button value="false" color="primary" style="margin: 5px;">INACTIVE
+                        <mat-radio-button [value]="false" color="primary" style="margin: 5px;">INACTIVE
                         </mat-radio-button>
                     </mat-radio-group>
-                    <ng-container *ngIf="submitted && form.IsActive.errors">
-                        <p class="caption status-danger" *ngIf="form.IsActive.errors?.required">
+                    <ng-container *ngIf="submitted && form.isActive.errors">
+                        <p class="caption status-danger" *ngIf="form.isActive.errors?.required">
                             *Required!
                         </p>
                     </ng-container>
