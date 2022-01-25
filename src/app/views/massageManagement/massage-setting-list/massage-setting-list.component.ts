@@ -58,7 +58,8 @@ export class MassageSettingListComponent implements OnInit {
      }
 
   ngOnInit(): void {
-    this.dataSource.data = this.exampleData;
+   // this.dataSource.data = this.exampleData;
+   this.getMassageData();
   }
 
   filterSubmit(clear: any) {
@@ -126,7 +127,7 @@ export class MassageSettingListComponent implements OnInit {
       this.searchForm.reset();
       this.page = 0;
       this.size = 10;
-      this.getUserData();
+      this.getMassageData();
     }
   }
 
@@ -182,7 +183,7 @@ export class MassageSettingListComponent implements OnInit {
                 this.router.navigate(['/']);
               } else {
                 this.toastService.showToast("success", 'Successful', "Deleted successfully.");
-                this.getUserData();
+                this.getMassageData();
               }
             },
             (err) => {
@@ -200,12 +201,12 @@ export class MassageSettingListComponent implements OnInit {
   }
 
 
-  getUserData() {
+  getMassageData() {
     this.spinnerService.activate();
     let params = new HttpParams();
     params = params.append('pageNumber', this.page.toString());
     params = params.append('pageSize', this.size.toString());
-    this.apiService.get('api/user/getAll', params).subscribe(
+    this.apiService.get('api/massageSetting/getMassageSettingList', params).subscribe(
       res => {
         this.spinnerService.deactivate();
         console.log(res);
@@ -245,7 +246,7 @@ export class MassageSettingListComponent implements OnInit {
     let params = new HttpParams();
 
     if (status == null && userName == null && rating == null && type == null) {
-      this.getUserData();
+      this.getMassageData();
     }else{
       this.filterSubmit(false);
     }

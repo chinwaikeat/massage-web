@@ -27,14 +27,15 @@ export class ViewRatingComponent implements OnInit {
     protected ref: NbDialogRef<ViewRatingComponent>) {
       this.ratingForm = this.formBuilder.group(
         {
-          UserName: ['', Validators.required],
-          Rating: ['', Validators.required],
+          userName: ['', Validators.required],
+          rating: ['', Validators.required],
         },
         
       );
      }
 
   ngOnInit(): void {
+    this.initializeData();
   }
 
   initializeData(){
@@ -43,8 +44,8 @@ export class ViewRatingComponent implements OnInit {
     }else{
 
       this.ratingForm.patchValue({
-        UserName: this.eventData.UserName,
-        Rating: this.eventData.Rating,
+        userName: this.eventData.userName,
+        rating: this.eventData.rating,
       });
     }
   }

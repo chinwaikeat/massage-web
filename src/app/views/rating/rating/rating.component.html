@@ -9,13 +9,13 @@
           <div>
             <mat-form-field style="margin-right: 20px;">
               <mat-label>User Name</mat-label>
-              <input matInput placeholder="User Name" formControlName="UserName" maxlength="30">
-              <mat-error *ngIf="form.UserName.errors?.maxlength">Cannot exceed 30 characters.
+              <input matInput placeholder="User Name" formControlName="userName" maxlength="30">
+              <mat-error *ngIf="form.userName.errors?.maxlength">Cannot exceed 30 characters.
               </mat-error>
             </mat-form-field>
             <mat-form-field style="margin-right: 20px;">
               <mat-label>Rating</mat-label>
-              <mat-select formControlName="Rating">
+              <mat-select formControlName="rating">
                 <mat-option value="1">1</mat-option>
                 <mat-option value="2">2</mat-option>
                 <mat-option value="3">3</mat-option>
@@ -41,18 +41,18 @@
 
         <ng-container matColumnDef="userName">
           <th class="headerText" *matHeaderCellDef mat-header-cell mat-sort-header sortActionDescription="Sort by userName">User Name</th>
-          <td *matCellDef="let row" mat-cell>{{ row.UserName }}</td>
+          <td *matCellDef="let row" mat-cell>{{ row.userName }}</td>
         </ng-container>
 
         <ng-container matColumnDef="rating">
           <th class="headerText" *matHeaderCellDef mat-header-cell>Rating</th>
-          <td *matCellDef="let row" mat-cell>{{ row.Rating }}</td>
+          <td *matCellDef="let row" mat-cell>{{ row.rating }}</td>
         </ng-container>
 
         <ng-container matColumnDef="createdAt">
           <th class="headerText" *matHeaderCellDef mat-header-cell>Created At</th>
           <td *matCellDef="let row" mat-cell>
-            {{ row.CreatedAt | date:'d MMMM y, h:mm a'}}
+            {{ row.createdAt | date:'d MMMM y, h:mm a'}}
           </td>
         </ng-container>
 

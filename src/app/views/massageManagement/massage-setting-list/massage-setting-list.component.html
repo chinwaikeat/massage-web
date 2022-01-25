@@ -58,28 +58,28 @@
 
         <ng-container matColumnDef="userName">
           <th class="headerText" *matHeaderCellDef mat-header-cell>User Name</th>
-          <td *matCellDef="let row" mat-cell>{{ row.UserName }}</td>
+          <td *matCellDef="let row" mat-cell>{{ row.userName }}</td>
         </ng-container>
 
         <ng-container matColumnDef="rating">
           <th class="headerText" *matHeaderCellDef mat-header-cell>Rating</th>
-          <td *matCellDef="let row" mat-cell>{{ row.Rating }}</td>
+          <td *matCellDef="let row" mat-cell>{{ row.rating }}</td>
         </ng-container>
 
         <ng-container matColumnDef="type">
           <th class="headerText" *matHeaderCellDef mat-header-cell>Type</th>
-          <td *matCellDef="let row" mat-cell>{{ row.Type }}</td>
+          <td *matCellDef="let row" mat-cell>{{ row.type }}</td>
         </ng-container>
 
         <ng-container matColumnDef="status">
           <th class="headerText" *matHeaderCellDef mat-header-cell>Status</th>
-          <td *matCellDef="let row" mat-cell>{{ row.IsActive ? "Active" : "Inactive" }}</td>
+          <td *matCellDef="let row" mat-cell>{{ row.isActive ? "Active" : "Inactive" }}</td>
         </ng-container>
 
         <ng-container matColumnDef="createdAt">
           <th class="headerText" *matHeaderCellDef mat-header-cell>Created At</th>
           <td *matCellDef="let row" mat-cell>
-            {{ row.CreatedAt | date:'d MMMM y, h:mm a'}}
+            {{ row.createdAt | date:'d MMMM y, h:mm a'}}
           </td>
         </ng-container>
 

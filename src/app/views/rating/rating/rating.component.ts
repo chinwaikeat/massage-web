@@ -64,25 +64,25 @@ export class RatingComponent implements OnInit {
     private toastService: ToastService
   ) {
     this.searchForm = this.formBuilder.group({
-      UserName: [null, Validators.maxLength(30)],
-      Rating: [null],
+      userName: [null, Validators.maxLength(30)],
+      rating: [null],
     });
   }
 
   ngOnInit(): void {
-    this.dataSource.data = this.exampleData;
+   // this.dataSource.data = this.exampleData;
+   this.getRatingData();
   }
 
   
   filterSubmit(clear: any) {
-    console.log(this.searchForm.value);
     if (clear) {
       this.paginator.firstPage();
     }
     if (this.searchForm.valid && this.searchForm.errors == null) {
       
-      let userName = this.searchForm.value.UserName;
-      let rating = this.searchForm.value.Rating;
+      let userName = this.searchForm.value.userName;
+      let rating = this.searchForm.value.rating;
       let params = new HttpParams();
 
       if (status == null && userName == null && rating == null ) {
@@ -94,7 +94,7 @@ export class RatingComponent implements OnInit {
         params = params.append('rating', rating ?? '');
         params = params.append('pageNumber', this.page.toString());
         params = params.append('pageSize', this.size.toString());
-        this.apiService.get('api/user/getFilteredUser', params).subscribe(
+        this.apiService.get('api/rating/getFilteredRating', params).subscribe(
           res => {
             this.spinnerService.deactivate();
             if (res.isError) {
@@ -133,13 +133,10 @@ export class RatingComponent implements OnInit {
       this.searchForm.reset();
       this.page = 0;
       this.size = 10;
-      this.getUserData();
+      this.getRatingData();
     }
   }
 
-  updateStatus() {
-    let data = this.searchForm.value;
-  }
 
 
 
@@ -157,12 +154,12 @@ export class RatingComponent implements OnInit {
   }
 
 
-  getUserData() {
+  getRatingData() {
     this.spinnerService.activate();
     let params = new HttpParams();
     params = params.append('pageNumber', this.page.toString());
     params = params.append('pageSize', this.size.toString());
-    this.apiService.get('api/user/getAll', params).subscribe(
+    this.apiService.get('api/rating/getRatingList', params).subscribe(
       res => {
         this.spinnerService.deactivate();
         console.log(res);
@@ -194,12 +191,12 @@ export class RatingComponent implements OnInit {
   onPaginateChange(event:any) {
     this.size = event.pageSize;
     this.page = event.pageIndex;
-    let userName = this.searchForm.value.UserName;
-    let rating = this.searchForm.value.Rating;
+    let userName = this.searchForm.value.userName;
+    let rating = this.searchForm.value.rating;
     let params = new HttpParams();
 
-    if (status == null && userName == null && rating == null) {
-      this.getUserData();
+    if ( userName == null && rating == null) {
+      this.getRatingData();
     }else{
       this.filterSubmit(false);
     }
