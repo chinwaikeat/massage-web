@@ -34,9 +34,9 @@
                                 Action
                             </th>
                         </tr>
-                        <ng-container formArrayName="MassageSettings">
+                        <ng-container formArrayName="massageSettings">
                             <ng-container *ngFor="
-                            let massageSetting of massageSettingControls.controls;
+                            let massageSetting of dataDisplay;
                             index as i
                           ">
                                 <ng-container *ngIf="massageSetting.value.IsDeleted == false">
@@ -79,13 +79,13 @@
             <div class="form-group row " style="height:60px;">
                 <label for="inputEmail1" class="label col-sm-4 col-form-label">Type</label>
                 <div class="col-sm-8">
-                    <nb-select formControlName="Type" [status]="form.Type.invalid && submitted? 'danger' : ''"
+                    <nb-select formControlName="type" [status]="form.type.invalid && submitted? 'danger' : ''"
                         style="width: 100%; max-width: 100%;">
                         <nb-option *ngFor="let e of types" [value]="e.value"> {{ e.name }} </nb-option>
 
                     </nb-select>
-                    <ng-container *ngIf="submitted && form.Type.errors">
-                        <p class="caption status-danger" *ngIf="form.Type.errors?.required">
+                    <ng-container *ngIf="submitted && form.type.errors">
+                        <p class="caption status-danger" *ngIf="form.type.errors?.required">
                             *Required!
                         </p>
                     </ng-container>
@@ -95,14 +95,14 @@
             <div class="form-group row" style="height:90px;">
                 <label for="inputEmail1" class="label col-sm-4 col-form-label">Status</label>
                 <div class="col-sm-8">
-                    <mat-radio-group formControlName="IsActive" style="display: flex; flex-direction: column;">
+                    <mat-radio-group formControlName="isActive" style="display: flex; flex-direction: column;">
                         <mat-radio-button value="true" color="primary" style="margin: 5px;">ACTIVE
                         </mat-radio-button>
                         <mat-radio-button value="false" color="primary" style="margin: 5px;">INACTIVE
                         </mat-radio-button>
                     </mat-radio-group>
-                    <ng-container *ngIf="submitted && form.IsActive.errors">
-                        <p class="caption status-danger" *ngIf="form.IsActive.errors?.required">
+                    <ng-container *ngIf="submitted && form.isActive.errors">
+                        <p class="caption status-danger" *ngIf="form.isActive.errors?.required">
                             *Required!
                         </p>
                     </ng-container>

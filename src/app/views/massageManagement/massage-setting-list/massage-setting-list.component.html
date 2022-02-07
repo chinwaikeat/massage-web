@@ -11,23 +11,19 @@
           <div>
             <mat-form-field style="margin-right: 20px;">
               <mat-label>User Name</mat-label>
-              <input matInput placeholder="User Name" formControlName="UserName" maxlength="30">
-              <mat-error *ngIf="form.UserName.errors?.maxlength">Cannot exceed 30 characters.
+              <input matInput placeholder="User Name" formControlName="userName" maxlength="30">
+              <mat-error *ngIf="form.userName.errors?.maxlength">Cannot exceed 30 characters.
               </mat-error>
             </mat-form-field>
             <mat-form-field style="margin-right: 20px;">
               <mat-label>Rating</mat-label>
-              <mat-select formControlName="Rating">
-                <mat-option value="1">1</mat-option>
-                <mat-option value="2">2</mat-option>
-                <mat-option value="3">3</mat-option>
-                <mat-option value="4">4</mat-option>
-                <mat-option value="5">5</mat-option>
-              </mat-select>
+              <input matInput placeholder="Rating" formControlName="rating" maxlength="30" type="number">
+              <mat-error *ngIf="form.rating.errors?.maxlength">Cannot exceed 30 characters.
+              </mat-error>
             </mat-form-field>
             <mat-form-field style="margin-right: 20px;">
               <mat-label>Type</mat-label>
-              <mat-select formControlName="Type">
+              <mat-select formControlName="type">
                 <mat-option value="DOCTOR_RECOMMEND">DOCTOR RECOMMEND</mat-option>
                 <mat-option value="USER_CUSTOMIZE">USER CUSTOMIZE</mat-option>
                 <mat-option value="DEFAULT_SETTING">DEFAULT SETTING</mat-option>
@@ -35,7 +31,7 @@
             </mat-form-field>
             <mat-form-field style="margin-right: 20px;">
               <mat-label>Status</mat-label>
-              <mat-select formControlName="IsActive">
+              <mat-select formControlName="status">
                 <mat-option value="true">ACTIVE</mat-option>
                 <mat-option value="false">INACTIVE</mat-option>
               </mat-select>

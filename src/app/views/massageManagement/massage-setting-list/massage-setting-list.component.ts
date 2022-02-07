@@ -50,10 +50,10 @@ export class MassageSettingListComponent implements OnInit {
     @Optional() private dialogService: NbDialogService,
     private toastService: ToastService,) {
       this.searchForm = this.formBuilder.group({
-        UserName: [null, Validators.maxLength(30)],
-        Rating: [null],
-        Type: [null],
-        IsActive: [null],
+        userName: [null, Validators.maxLength(30)],
+        rating: [null],
+        type: [null],
+        status: [null],
       });
      }
 
@@ -69,10 +69,10 @@ export class MassageSettingListComponent implements OnInit {
     }
     if (this.searchForm.valid && this.searchForm.errors == null) {
       
-      let userName = this.searchForm.value.UserName;
-      let rating = this.searchForm.value.Rating;
-      let type = this.searchForm.value.Type;
-      let status = this.searchForm.value.Status
+      let userName = this.searchForm.value.userName;
+      let rating = this.searchForm.value.rating;
+      let type = this.searchForm.value.type;
+      let status = this.searchForm.value.status
       let params = new HttpParams();
 
       if (type  == null && userName == null && rating == null && status == null) {
@@ -81,12 +81,12 @@ export class MassageSettingListComponent implements OnInit {
       } else {
         this.spinnerService.activate();
         params = params.append('userName', userName ?? '');
-        params = params.append('rating', rating ?? '');
+        params = params.append('rating', rating ?? 0);
         params = params.append('type', type  ?? '');
-        params = params.append('status', status );
+        params = params.append('status', status ?? '');
         params = params.append('pageNumber', this.page.toString());
         params = params.append('pageSize', this.size.toString());
-        this.apiService.get('api/user/getFilteredUser', params).subscribe(
+        this.apiService.get('api/massageSetting/getFilteredMassageSetting', params).subscribe(
           res => {
             this.spinnerService.deactivate();
             if (res.isError) {
@@ -118,10 +118,10 @@ export class MassageSettingListComponent implements OnInit {
   }
 
   clearForm() {
-    let userName = this.searchForm.value.UserName;
-    let rating = this.searchForm.value.Rating;
-    let type = this.searchForm.value.Type
-    let status = this.searchForm.value.IsActive;
+    let userName = this.searchForm.value.userName;
+    let rating = this.searchForm.value.rating;
+    let type = this.searchForm.value.type
+    let status = this.searchForm.value.isActive;
     if(status != null || userName != null || rating != null || type != null){
       this.paginator.firstPage();
       this.searchForm.reset();
@@ -163,20 +163,20 @@ export class MassageSettingListComponent implements OnInit {
     this.dialogService.open(ConfirmationModalComponent, {
       context: {
         title: "Delete Confirmation",
-        message: "Are you sure delete user of " + row.UserName + "?",
+        message: "Are you sure want to delete ?",
       },
     }).onClose.subscribe(value => {
       if (value == 1) {
         this.spinnerService.activate();
         let params = new HttpParams();
-        params = params.append('userId', row.UserId ?? '');
-        this.apiService.actualDelete("api/user/delete", params)
+        params = params.append('massageSettingId', row.massageSettingId ?? '');
+        this.apiService.actualDelete("api/massageSetting/delete", params)
           .subscribe(
             (res) => {
               this.spinnerService.deactivate();
               console.log(res)
               if (res.isError) {
-                this.toastService.showToast("danger", 'Error', "Failed to delete user.");
+                this.toastService.showToast("danger", 'Error', "Failed to delete.");
               } else if (res.isTokenExpired) {
                 this.toastService.showToast('danger', 'Error', res.message);
                 this.storageService.clear();
@@ -238,10 +238,10 @@ export class MassageSettingListComponent implements OnInit {
   onPaginateChange(event:any) {
     this.size = event.pageSize;
     this.page = event.pageIndex;
-    let userName = this.searchForm.value.UserName;
-    let rating = this.searchForm.value.Rating;
-    let type = this.searchForm.value.Type;
-    let status = this.searchForm.value.IsActive;
+    let userName = this.searchForm.value.userName;
+    let rating = this.searchForm.value.rating;
+    let type = this.searchForm.value.type;
+    let status = this.searchForm.value.isActive;
     
     let params = new HttpParams();
 

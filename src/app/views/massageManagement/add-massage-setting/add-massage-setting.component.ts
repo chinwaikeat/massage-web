@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Optional } from '@angular/core';
+import { Component, OnInit, Input, Optional, ComponentFactoryResolver } from '@angular/core';
 import {
   Validators,
   FormBuilder,
@@ -42,6 +42,8 @@ export class AddMassageSettingComponent implements OnInit {
   highcharts: any;
   subscribe: any
 
+  dataDisplay: any = []
+
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -53,9 +55,9 @@ export class AddMassageSettingComponent implements OnInit {
     @Optional() private dialogService: NbDialogService
   ) {
     this.addMassageSettingForm = this.formBuilder.group({
-      Type: ['', Validators.required],
-      MassageSettings: this.formBuilder.array([], Validators.required),
-      IsActive: ['true', Validators.required],
+      type: ['', Validators.required],
+      massageSettings: this.formBuilder.array([], Validators.required),
+      isActive: ['true', Validators.required],
     });
 
     
@@ -251,6 +253,14 @@ export class AddMassageSettingComponent implements OnInit {
                 value.massageSettingIndex
               ].value.Strength = value.data.strength;
 
+             
+              this.dataDisplay[
+                value.massageSettingIndex
+              ].Duration = value.data.duration;
+              this.dataDisplay[
+                value.massageSettingIndex
+              ].Strength = value.data.strength;
+
               //update temp data
               this.tempHighchartData[value.massageSettingIndex].description =
                 'Duration: ' +
@@ -261,10 +271,19 @@ export class AddMassageSettingComponent implements OnInit {
                 value.data.duration;
 
               //calculate total massage time
-              var totalMassageTime =
-                this.massageSettingControls.controls.reduce(function (
-                  totalSum,
-                  currentValue
+              // var totalMassageTime =
+              //   this.massageSettingControls.controls.reduce(function (
+              //     totalSum,
+              //     currentValue
+              //   ) {
+              //     return totalSum + currentValue.value.Duration;
+              //   },
+              //   0);
+
+                var totalMassageTime =
+                this.dataDisplay.reduce(function (
+                  totalSum: any,
+                  currentValue: { value: { Duration: any; }; }
                 ) {
                   return totalSum + currentValue.value.Duration;
                 },
@@ -292,6 +311,15 @@ export class AddMassageSettingComponent implements OnInit {
                   CustomColor
                 )
               );
+
+              this.dataDisplay.push(
+                this.newMassageSetting(
+                  seriesId,
+                  value.data.duration,
+                  value.data.strength,
+                  CustomColor
+                )
+              )
 
               //construct series object
               var seriesObj = {
@@ -324,7 +352,7 @@ export class AddMassageSettingComponent implements OnInit {
   }
 
   get massageSettingControls(): FormArray {
-    return this.addMassageSettingForm.get('MassageSettings') as FormArray;
+    return this.addMassageSettingForm.get('massageSettings') as FormArray;
   }
 
   private newMassageSetting(
@@ -353,17 +381,41 @@ export class AddMassageSettingComponent implements OnInit {
       .onClose.subscribe((value) => {
         if (value == 1) {
           //update used left
-          this.totalTimeLeft =
-            this.totalTimeLeft +
-            this.massageSettingControls.controls[index].value.Duration;
+          // this.totalTimeLeft =
+          //   this.totalTimeLeft +
+          //   this.massageSettingControls.controls[index].value.Duration;
 
-          this.massageSettingControls.controls[index].value.IsDeleted = true;
+          this.totalTimeLeft = this.totalTimeLeft + this.dataDisplay[index].Duration;
 
-          this.tempHighchartData = this.massageSettingControls.controls
-            .filter((form) => {
+         // this.massageSettingControls.controls[index].value.IsDeleted = true;
+
+          this.dataDisplay[index].IsDeleted = true;
+
+          // this.tempHighchartData = this.massageSettingControls.controls
+          //   .filter((form) => {
+          //     return form.value.IsDeleted == false;
+          //   })
+          //   .map((item) => {
+          //     return {
+          //       description:
+          //         'Duration: ' +
+          //         item.value.Duration +
+          //         ' <br/>Strength: ' +
+          //         item.value.Strength,
+          //       color: item.value.Color,
+          //       data: [
+          //         {
+          //           y: item.value.Duration,
+          //         },
+          //       ],
+          //     };
+          //   });
+
+            this.tempHighchartData = this.dataDisplay
+            .filter((form: { value: { IsDeleted: boolean; }; }) => {
               return form.value.IsDeleted == false;
             })
-            .map((item) => {
+            .map((item: { value: { Duration: string; Strength: string; Color: any; }; }) => {
               return {
                 description:
                   'Duration: ' +
@@ -387,6 +439,23 @@ export class AddMassageSettingComponent implements OnInit {
  
 
   onSubmit() {
+    var test = [];
+
+    
+
+    test.push({
+      'd': 12,
+      's': 12,
+
+    });
+
+    test.push({
+      'd': 55,
+      's': 1,
+
+    });
+
+    console.log("testing ", JSON.stringify(test))
     // this.spinnerService.activate();
     // // this.submitted = true;
     // if (

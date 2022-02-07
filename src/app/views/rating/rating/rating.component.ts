@@ -91,7 +91,7 @@ export class RatingComponent implements OnInit {
       } else {
         this.spinnerService.activate();
         params = params.append('userName', userName ?? '');
-        params = params.append('rating', rating ?? '');
+        params = params.append('rating', rating ?? 0);
         params = params.append('pageNumber', this.page.toString());
         params = params.append('pageSize', this.size.toString());
         this.apiService.get('api/rating/getFilteredRating', params).subscribe(
