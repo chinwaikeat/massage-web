@@ -14,73 +14,107 @@ import { Router } from '@angular/router';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  menu: NbMenuItem[] = [{
-    title: 'Dashboard',
-    icon: 'people-outline',
-    link: '/dashboard/home',
-  },
-  {
-    title: 'User Management',
-    icon: 'people-outline',
-    children: [
-      {
-        icon: "person-add-outline",
-        title: 'Users',
-        link: '/dashboard/user',
-      },
-    ]
-  },
-  {
-    title: 'Massage Management',
-    icon: 'settings-2-outline',
-    children: [
-      {
-        icon: "options-outline",
-        title: 'Massage Setting',
-        link: '/dashboard/massageSetting',
-      },
-      {
-        icon: 'activity-outline',
-        title: 'User Rating',
-        link: '/dashboard/rating',
-      },
-    ]
-  },
+   menu: NbMenuItem[] = [
+     //{
+  //   title: 'Dashboard',
+  //   icon: 'people-outline',
+  //   link: '/dashboard/home',
+  // },
+  // {
+  //   title: 'User Management',
+  //   icon: 'people-outline',
+  //   children: [
+  //     {
+  //       icon: "person-add-outline",
+  //       title: 'Users',
+  //       link: '/dashboard/user',
+  //     },
+  //   ]
+  // },
+  // {
+  //   title: 'Massage Management',
+  //   icon: 'settings-2-outline',
+  //   children: [
+  //     {
+  //       icon: "options-outline",
+  //       title: 'Massage Setting',
+  //       link: '/dashboard/massageSetting',
+  //     },
+  //     {
+  //       icon: 'activity-outline',
+  //       title: 'User Rating',
+  //       link: '/dashboard/rating',
+  //     },
+  //   ]
+  // },
   
 ];
  
   constructor(private storage: StorageService, private sidebarService: NbSidebarService,private router: Router,) { }
 
   ngOnInit(): void {
-  //  this.setMenuItem();
+    this.setMenuItem();
   this.router.navigate(["dashboard/home"]);
   }
 
   setMenuItem() {
     const role = this.storage.getRole();
-    if (role == 'MASTER ADMIN' || role == 'ADMIN') {
+    if (role == 'MASTER_ADMIN' || role == 'ADMIN') {
       this.menu.push({
         title: 'Dashboard',
-        icon: 'grid-outline',
+        icon: 'people-outline',
         link: '/dashboard/home',
       },
       {
-        title: 'Users Management',
+        title: 'User Management',
         icon: 'people-outline',
-        link: '/dashboard/user',
+        children: [
+          {
+            icon: "person-add-outline",
+            title: 'Users',
+            link: '/dashboard/user',
+          },
+        ]
       },
       {
-        title: 'Student Management',
-        icon: 'people-outline',
-        link: '/dashboard/student',
+        title: 'Massage Management',
+        icon: 'settings-2-outline',
+        children: [
+          {
+            icon: "options-outline",
+            title: 'Massage Setting',
+            link: '/dashboard/massageSetting',
+          },
+          {
+            icon: 'activity-outline',
+            title: 'User Rating',
+            link: '/dashboard/rating',
+          },
+        ]
       },
       )
-    }else if(role == 'NORMAL'){
+    }else if(role == 'DOCTOR'){
       this.menu.push({
         title: 'Dashboard',
-        icon: 'grid-outline',
-        link: '/pages/dashboard',
-      },)
+        icon: 'people-outline',
+        link: '/dashboard/home',
+      },  {
+        title: 'Massage Management',
+        icon: 'settings-2-outline',
+        children: [
+          {
+            icon: "options-outline",
+            title: 'Massage Setting',
+            link: '/dashboard/massageSetting',
+          },
+          {
+            icon: 'activity-outline',
+            title: 'User Rating',
+            link: '/dashboard/rating',
+          },
+        ]
+      },
+      )
     }
   }
 

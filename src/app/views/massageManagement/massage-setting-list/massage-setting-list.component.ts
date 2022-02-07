@@ -13,6 +13,7 @@ import { NbDialogService  } from '@nebular/theme';
 import { HttpParams } from '@angular/common/http';
 import { ConfirmationModalComponent } from '../../../@theme/components/modal/confirmation-modal/confirmation-modal.component';
 import { ViewOrEditMassageSettingComponent } from '../view-or-edit-massage-setting/view-or-edit-massage-setting.component';
+import { DataCommunicationService } from 'src/app/services/dataCommunication/data-communication.service';
 
 @Component({
   selector: 'app-massage-setting-list',
@@ -47,6 +48,7 @@ export class MassageSettingListComponent implements OnInit {
     private storageService: StorageService, 
     private spinnerService: SpinnerService,
     private datePipe: DatePipe,
+    private dataCommunicationService: DataCommunicationService,
     @Optional() private dialogService: NbDialogService,
     private toastService: ToastService,) {
       this.searchForm = this.formBuilder.group({
@@ -137,7 +139,8 @@ export class MassageSettingListComponent implements OnInit {
 
   addMassageSetting() {
    // this.router.navigate(['/dashboard/addMassageSetting']);
-   this.router.navigate(['/dashboard/addMassageSetting'], { queryParams: { pageEvent: 'view', data: ''} });
+   this.dataCommunicationService.setPassedItemData('');
+   this.router.navigate(['/dashboard/addMassageSetting']);
   }
 
 
@@ -156,7 +159,8 @@ export class MassageSettingListComponent implements OnInit {
   //     state: { foo: 'bar', name: 'Chin ****************'}
   // });
 
-  this.router.navigate(['/dashboard/addMassageSetting'], { queryParams: { pageEvent: 'edit', data: row} });
+    this.dataCommunicationService.setPassedItemData(row);
+    this.router.navigate(['/dashboard/addMassageSetting']);
   }
 
   deleteMassageSetting(row:any) {

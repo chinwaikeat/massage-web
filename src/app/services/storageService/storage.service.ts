@@ -104,14 +104,14 @@ export class StorageService {
   }
 
 
-  public setUserId(userId: any){
-    this.cookieService ? this.cookieService.set(this.userIdKey, userId) : "";
-  }
+  // public setUserId(userId: any){
+  //   this.cookieService ? this.cookieService.set(this.userIdKey, userId) : "";
+  // }
 
-  public getUserId(): any {
-    const userId = this.cookieService.get(this.userIdKey);
-    return userId;
-  }
+  // public getUserId(): any {
+  //   const userId = this.cookieService.get(this.userIdKey);
+  //   return userId;
+  // }
 
 
 

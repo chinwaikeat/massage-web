@@ -3,7 +3,7 @@
         <span>
             <nb-icon class="cursor-pointer" (click)="goback()" icon="arrow-back-outline"></nb-icon>
         </span>
-        <span class="subtitle" style="margin-left: 0.5em;">{{pageEvent == "edit"? "Edit massage setting": "Add Massage Setting"}}</span>
+        <span class="subtitle" style="margin-left: 0.5em;">{{isEdit ? "Edit massage setting": "Add massage setting"}}</span>
     </nb-card-header>
     <nb-card-body>
         <form [formGroup]="addMassageSettingForm" (ngSubmit)="onSubmit()">
@@ -14,7 +14,7 @@
             <div class="form-group row" style="margin-bottom: 70px;">
                 <div class="col-sm-12 mb-3 mt-4">
                     <label for="inputEmail1" class="label col-form-label mr-3">Massage settings</label>
-                    <button nbButton status="primary" shape="round" size="small" outline [disabled]='totalTimeLeft <= 0 ? true: false'
+                    <button nbButton status="primary" shape="round" size="small" type="button" outline [disabled]='totalTimeLeft <= 0 ? true: false'
                         (click)="addOrEditMassageSetting(false, null, 0)">Add<nb-icon icon="plus-circle-outline"></nb-icon></button>
 
                 </div>
@@ -34,40 +34,40 @@
                                 Action
                             </th>
                         </tr>
-                        <ng-container formArrayName="massageSettings">
+                        <ng-container formArrayName="massageConfiguration">
                             <ng-container *ngFor="
                             let massageSetting of dataDisplay;
                             index as i
                           ">
-                                <ng-container *ngIf="massageSetting.value.IsDeleted == false">
+                                <!-- <ng-container *ngIf="massageSetting.IsDeleted == false"> -->
                                     <ng-container [formGroupName]="i">
                                         <tr>
                                             <td style="padding-left: 1em; padding-right: 1em; ">
                                                 <div class=" m-3" style="  display: table;">
-                                                    <div class='box' [style.background-color]='massageSetting.value.Color'></div>
+                                                    <div class='box' [style.background-color]='massageSetting.Color'></div>
                                                     <div class='inner-box'>
-                                                        <div>Duration: {{massageSetting.value.Duration}}</div>
-                                                        <div>Strength: {{massageSetting.value.Strength}}</div>
+                                                        <div>Duration: {{massageSetting.Duration}}</div>
+                                                        <div>Strength: {{massageSetting.Strength}}</div>
                                                     </div>
                                                   
                                                 </div>
                                             </td>
                                             <td style="padding-left: 1em; padding-right: 1em; text-Align: Center">
-                                                <button nbButton ghost status="primary" (click)="addOrEditMassageSetting(true, massageSetting.value, i)">
+                                                <button nbButton ghost status="primary" type="button" (click)="addOrEditMassageSetting(true, massageSetting, i)">
                                                     <nb-icon icon="edit-outline"></nb-icon>
                                                 </button>
-                                                <button nbButton ghost status="danger" (click)="deleteSelectedMassageSetting(i, massageSetting.value.SeriesId)">
+                                                <button nbButton ghost status="danger" type="button" (click)="deleteSelectedMassageSetting(i, massageSetting.SeriesId)">
                                                     <nb-icon icon="trash-2-outline"></nb-icon>
                                                 </button>
                                             </td>
                                         </tr>
                                     </ng-container>
-                                </ng-container>
+                                <!-- </ng-container> -->
 
                             </ng-container>
                         </ng-container>
                     </table>
-                    <ng-container *ngIf="submitted && isCarPlateEmpty">
+                    <ng-container *ngIf="submitted && isMassageSettingEmpty">
                         <p class="caption status-danger">
                             *Required!
                         </p>
@@ -75,8 +75,20 @@
 
                 </div>
             </div>
-
-            <div class="form-group row " style="height:60px;">
+            <div class="form-group row" style="height:90px; margin-bottom: 40px;">
+                <label for="inputEmail1" class="label col-sm-4 col-form-label">Description</label>
+                <div class="col-sm-8">
+                    <textarea rows="4" nbInput fullWidth formControlName="description" maxlength="200"
+                    [status]="form.description.invalid && submitted? 'danger' : 'basic'"
+                    ></textarea>
+                    <ng-container *ngIf="submitted && form.description.errors">
+                        <p class="caption status-danger" *ngIf="form.description.errors?.required">
+                            *Required!
+                        </p>
+                    </ng-container>
+                </div>
+            </div>
+            <!-- <div class="form-group row " style="height:60px;">
                 <label for="inputEmail1" class="label col-sm-4 col-form-label">Type</label>
                 <div class="col-sm-8">
                     <nb-select formControlName="type" [status]="form.type.invalid && submitted? 'danger' : ''"
@@ -90,24 +102,26 @@
                         </p>
                     </ng-container>
                 </div>
-            </div>
-
-            <div class="form-group row" style="height:90px;">
-                <label for="inputEmail1" class="label col-sm-4 col-form-label">Status</label>
-                <div class="col-sm-8">
-                    <mat-radio-group formControlName="isActive" style="display: flex; flex-direction: column;">
-                        <mat-radio-button value="true" color="primary" style="margin: 5px;">ACTIVE
-                        </mat-radio-button>
-                        <mat-radio-button value="false" color="primary" style="margin: 5px;">INACTIVE
-                        </mat-radio-button>
-                    </mat-radio-group>
-                    <ng-container *ngIf="submitted && form.isActive.errors">
-                        <p class="caption status-danger" *ngIf="form.isActive.errors?.required">
-                            *Required!
-                        </p>
-                    </ng-container>
+            </div> -->
+            <ng-container *ngIf="massageSettingType == 'DOCTOR_RECOMMEND'">
+                <div class="form-group row" style="height:90px;">
+                    <label for="inputEmail1" class="label col-sm-4 col-form-label">Status</label>
+                    <div class="col-sm-8">
+                        <mat-radio-group formControlName="isActive" style="display: flex; flex-direction: column;">
+                            <mat-radio-button [value]="true" color="primary" style="margin: 5px;">ACTIVE
+                            </mat-radio-button>
+                            <mat-radio-button [value]="false" color="primary" style="margin: 5px;">INACTIVE
+                            </mat-radio-button>
+                        </mat-radio-group>
+                        <ng-container *ngIf="submitted && form.isActive.errors">
+                            <p class="caption status-danger" *ngIf="form.isActive.errors?.required">
+                                *Required!
+                            </p>
+                        </ng-container>
+                    </div>
                 </div>
-            </div>
+            </ng-container>
+           
 
             <div class="form-group row">
                 <div class="offset-sm-4 col-sm-8">

@@ -1,4 +1,10 @@
-import { Component, OnInit, Input, Optional, ComponentFactoryResolver } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  Optional,
+  ComponentFactoryResolver,
+} from '@angular/core';
 import {
   Validators,
   FormBuilder,
@@ -21,8 +27,9 @@ import * as Highcharts from 'highcharts';
 import { Options, SeriesLineOptions } from 'highcharts';
 import { ConfirmationModalComponent } from '../../../@theme/components/modal/confirmation-modal/confirmation-modal.component';
 import { v4 as uuidv4 } from 'uuid';
-import {Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { DataCommunicationService } from 'src/app/services/dataCommunication/data-communication.service';
 
 @Component({
   selector: 'app-add-massage-setting',
@@ -30,45 +37,48 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./add-massage-setting.component.scss'],
 })
 export class AddMassageSettingComponent implements OnInit {
-  pageEvent: any;
+  subscription!: Subscription;
+  isEdit: boolean = false;
+  massageSettingType: any;
   addMassageSettingForm!: FormGroup;
   submitted: boolean = false;
-  isCarPlateEmpty: boolean = false;
+  isMassageSettingEmpty: boolean = false;
 
   types: any;
   maxMinutes: number = 30;
   totalTimeLeft: number = 30;
   tempHighchartData: any = [];
   highcharts: any;
-  subscribe: any
-
-  dataDisplay: any = []
+  subscribe: any;
+  dataDisplay: any = [];
 
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
-    private activateRouter:ActivatedRoute,
+    private activateRouter: ActivatedRoute,
     private apiService: ApiService,
     private toastService: ToastService,
     private spinnerService: SpinnerService,
     private storageService: StorageService,
+    private dataCommunicationService: DataCommunicationService,
     @Optional() private dialogService: NbDialogService
   ) {
     this.addMassageSettingForm = this.formBuilder.group({
-      type: ['', Validators.required],
-      massageSettings: this.formBuilder.array([], Validators.required),
-      isActive: ['true', Validators.required],
+      massageSettingId: [0, Validators.required],
+      type: [''],
+      description: ['', Validators.required],
+      massageConfiguration: this.formBuilder.array([], Validators.required),
+      isActive: [true, Validators.required],
+      modifiedAt: [null],
     });
-
-    
   }
 
   ngOnInit(): void {
-    this.types = [
-      { value: 'DOCTOR_RECOMMEND', name: 'DOCTOR RECOMMEND' },
-      { value: 'DEFAULT_SETTING', name: 'DEFAULT SETTING' },
-      { value: 'USER_CUSTOMIZE', name: 'USER CUSTOMIZE' },
-    ];
+    // this.types = [
+    //   { value: 'DOCTOR_RECOMMEND', name: 'DOCTOR RECOMMEND' },
+    //   { value: 'DEFAULT_SETTING', name: 'DEFAULT SETTING' },
+    //   { value: 'USER_CUSTOMIZE', name: 'USER CUSTOMIZE' },
+    // ];
 
     //  this.exampleData =[
     //   {
@@ -202,21 +212,46 @@ export class AddMassageSettingComponent implements OnInit {
     // console.log('>>authenticate-username:41:',
     //     this.router.getCurrentNavigation()?.extras);
 
-    this.subscribe =  this.activateRouter.queryParams.subscribe(params => {
-      //this.userWithRole.user = JSON.parse(params["user"]);
-      console.log("test**** " , params)
+    // this.subscribe = this.activateRouter.queryParams.subscribe((params) => {
+    //   //this.userWithRole.user = JSON.parse(params["user"]);
+    //   console.log('test**** ', params);
 
-      this.pageEvent = params['pageEvent']
-      
+    //   this.pageEvent = params['pageEvent'];
+    //   this.dataPass = params['data'];
+    //   console.log("*/*/*/*/ " , params['data'].type)
+    // });
+
+    this.subscription =
+      this.dataCommunicationService.getPassedItemData.subscribe((res) => {
+        if (res) {
+          this.addMassageSettingForm.patchValue({
+            massageSettingId: res.massageSettingId,
+            massageConfiguration: JSON.parse(res.massageConfiguration),
+            description: res.description,
+            type: res.type,
+            isActive: res.isActive,
+            modifiedAt: res.modifiedAt,
+          });
+          this.massageSettingType = res.type;
+          this.initializeLineGraphData(JSON.parse(res.massageConfiguration));
+          this.isEdit = true;
+        }else{
+          this.isEdit = false;
+        }
+      });
+
+    //  this.isEdit = false;
+  }
+
+  initializeLineGraphData(data: any) {
+    data.map((item: any) => {
+      this.addDataToForm(item.d, item.s)
     });
-
-   
-    
-  //  this.isEdit = false;
   }
 
   private randomColor() {
-    return Math.floor(Math.random() * 16777215).toString(16);
+   // return Math.floor(Math.random() * 16777215).toString(16);
+   return Math.floor(0x1000000 * Math.random()).toString(16);
   }
 
   goback() {
@@ -248,18 +283,15 @@ export class AddMassageSettingComponent implements OnInit {
               //update form array data
               this.massageSettingControls.controls[
                 value.massageSettingIndex
-              ].value.Duration = value.data.duration;
+              ].value.d = value.data.duration;
               this.massageSettingControls.controls[
                 value.massageSettingIndex
-              ].value.Strength = value.data.strength;
+              ].value.s = value.data.strength;
 
-             
-              this.dataDisplay[
-                value.massageSettingIndex
-              ].Duration = value.data.duration;
-              this.dataDisplay[
-                value.massageSettingIndex
-              ].Strength = value.data.strength;
+              this.dataDisplay[value.massageSettingIndex].Duration =
+                value.data.duration;
+              this.dataDisplay[value.massageSettingIndex].Strength =
+                value.data.strength;
 
               //update temp data
               this.tempHighchartData[value.massageSettingIndex].description =
@@ -280,14 +312,13 @@ export class AddMassageSettingComponent implements OnInit {
               //   },
               //   0);
 
-                var totalMassageTime =
-                this.dataDisplay.reduce(function (
-                  totalSum: any,
-                  currentValue: { value: { Duration: any; }; }
-                ) {
-                  return totalSum + currentValue.value.Duration;
-                },
-                0);
+              var totalMassageTime = this.dataDisplay.reduce(function (
+                totalSum: any,
+                currentValue: { Duration: any }
+              ) {
+                return totalSum + currentValue.Duration;
+              },
+              0);
 
               //update used left
               this.totalTimeLeft = 30 - totalMassageTime;
@@ -297,52 +328,8 @@ export class AddMassageSettingComponent implements OnInit {
                 series: this.tempHighchartData,
               });
             } else {
-              //generate random color
-              var CustomColor = '#' + this.randomColor();
-              //generate id for series
-              var seriesId = uuidv4();
-
-              //push form array to form
-              this.massageSettingControls.push(
-                this.newMassageSetting(
-                  seriesId,
-                  value.data.duration,
-                  value.data.strength,
-                  CustomColor
-                )
-              );
-
-              this.dataDisplay.push(
-                this.newMassageSetting(
-                  seriesId,
-                  value.data.duration,
-                  value.data.strength,
-                  CustomColor
-                )
-              )
-
-              //construct series object
-              var seriesObj = {
-                id: seriesId,
-                description:
-                  'Duration: ' +
-                  value.data.duration +
-                  ' <br/>Strength: ' +
-                  value.data.strength,
-                color: CustomColor,
-                data: [
-                  {
-                    y: value.data.duration,
-                  },
-                ],
-              };
-
-              //add data to chart and temp
-              this.tempHighchartData.push(seriesObj);
-              this.highcharts.addSeries(seriesObj);
-
-              //update total time left
-              this.totalTimeLeft = this.totalTimeLeft - value.data.duration;
+              this.isMassageSettingEmpty = false;
+              this.addDataToForm(value.data.duration, value.data.strength)
             }
           }
           //hide loading
@@ -351,8 +338,59 @@ export class AddMassageSettingComponent implements OnInit {
     }
   }
 
+  private addDataToForm(duration:number, strength: number){
+     //generate random color
+     var CustomColor = '#' + this.randomColor();
+     //generate id for series
+     var seriesId = uuidv4();
+
+     //push form array to form
+     this.massageSettingControls.push(
+       this.newMassageConfiguration(duration, strength)
+       // this.newMassageSetting(
+       //   seriesId,
+       //   value.data.duration,
+       //   value.data.strength,
+       //   CustomColor
+       // )
+     );
+
+     //data use to display in ui
+     this.dataDisplay.push(
+       this.newMassageSetting(
+         seriesId,
+        duration,
+         strength,
+         CustomColor
+       )
+     );
+
+     //construct series object
+     var seriesObj = {
+       id: seriesId,
+       description:
+         'Duration: ' +
+         duration +
+         ' <br/>Strength: ' +
+         strength,
+       color: CustomColor,
+       data: [
+         {
+           y: duration,
+         },
+       ],
+     };
+
+     //add data to chart and temp
+     this.tempHighchartData.push(seriesObj);
+     this.highcharts.addSeries(seriesObj);
+
+     //update total time left
+     this.totalTimeLeft = this.totalTimeLeft - duration;
+  }
+
   get massageSettingControls(): FormArray {
-    return this.addMassageSettingForm.get('massageSettings') as FormArray;
+    return this.addMassageSettingForm.get('massageConfiguration') as FormArray;
   }
 
   private newMassageSetting(
@@ -361,12 +399,26 @@ export class AddMassageSettingComponent implements OnInit {
     strength: number,
     customColor: string
   ) {
-    return this.formBuilder.group({
+    // return this.formBuilder.group({
+    //   SeriesId: seriesId,
+    //   Duration: duration,
+    //   Strength: strength,
+    //   Color: customColor,
+    //   IsDeleted: false,
+    // });
+    return {
       SeriesId: seriesId,
       Duration: duration,
       Strength: strength,
       Color: customColor,
-      IsDeleted: false,
+      //   IsDeleted: false,
+    };
+  }
+
+  private newMassageConfiguration(duration: number, strength: number) {
+    return this.formBuilder.group({
+      d: duration,
+      s: strength,
     });
   }
 
@@ -385,11 +437,12 @@ export class AddMassageSettingComponent implements OnInit {
           //   this.totalTimeLeft +
           //   this.massageSettingControls.controls[index].value.Duration;
 
-          this.totalTimeLeft = this.totalTimeLeft + this.dataDisplay[index].Duration;
+          this.totalTimeLeft =
+            this.totalTimeLeft + this.dataDisplay[index].Duration;
 
-         // this.massageSettingControls.controls[index].value.IsDeleted = true;
+          this.massageSettingControls.removeAt(index);
 
-          this.dataDisplay[index].IsDeleted = true;
+          this.dataDisplay.splice(index, 1);
 
           // this.tempHighchartData = this.massageSettingControls.controls
           //   .filter((form) => {
@@ -411,94 +464,88 @@ export class AddMassageSettingComponent implements OnInit {
           //     };
           //   });
 
-            this.tempHighchartData = this.dataDisplay
-            .filter((form: { value: { IsDeleted: boolean; }; }) => {
-              return form.value.IsDeleted == false;
-            })
-            .map((item: { value: { Duration: string; Strength: string; Color: any; }; }) => {
+          this.tempHighchartData = this.dataDisplay
+            // .filter((form: { value: { IsDeleted: boolean } }) => {
+            //   return form.value.IsDeleted == false;
+            // })
+            .map((item: { Duration: string; Strength: string; Color: any }) => {
               return {
                 description:
                   'Duration: ' +
-                  item.value.Duration +
+                  item.Duration +
                   ' <br/>Strength: ' +
-                  item.value.Strength,
-                color: item.value.Color,
+                  item.Strength,
+                color: item.Color,
                 data: [
                   {
-                    y: item.value.Duration,
+                    y: item.Duration,
                   },
                 ],
               };
             });
-            //remove specific data from highchart
+          //remove specific data from highchart
           this.highcharts.get(seriesId).remove();
         }
       });
   }
 
- 
+  checkMassageSettingData() {
+    if (this.massageSettingControls.controls.length > 0) {
+      this.isMassageSettingEmpty = false;
+    } else {
+      this.isMassageSettingEmpty = true;
+    }
+  }
 
   onSubmit() {
-    var test = [];
-
-    
-
-    test.push({
-      'd': 12,
-      's': 12,
-
-    });
-
-    test.push({
-      'd': 55,
-      's': 1,
-
-    });
-
-    console.log("testing ", JSON.stringify(test))
-    // this.spinnerService.activate();
-    // // this.submitted = true;
-    // if (
-    //   this.addMassageSettingForm.valid &&
-    //   this.addMassageSettingForm.errors == null
-    // ) {
-    //   let data = this.addMassageSettingForm.value;
-    //   console.log(data);
-    //   this.apiService.post('api/user/add', data).subscribe(
-    //     (res) => {
-    //       this.spinnerService.deactivate();
-    //       if (res.isError) {
-    //         this.toastService.showToast('danger', 'Error', res.message);
-    //       } else if (res.isTokenExpired) {
-    //         this.toastService.showToast('danger', 'Error', res.message);
-    //         this.storageService.clear();
-    //         this.router.navigate(['/']);
-    //       } else {
-    //         this.toastService.showToast(
-    //           'success',
-    //           'Successful',
-    //           'New User added successfully.'
-    //         );
-    //         this.router.navigate(['/dashboard/user']);
-    //       }
-    //     },
-    //     (err) => {
-    //       this.spinnerService.deactivate();
-    //       if (!err.ok && err.status == 0) {
-    //         this.toastService.showToast('danger', 'Error', err.message);
-    //       } else {
-    //         this.toastService.showToast(
-    //           'danger',
-    //           'Error',
-    //           err.error?.message ?? 'Error connecting to server!'
-    //         );
-    //       }
-    //     }
-    //   );
-    // } else {
-    //   console.log(this.addMassageSettingForm);
-    //   this.spinnerService.deactivate();
-    // }
+    this.checkMassageSettingData();
+   
+    this.spinnerService.activate();
+    this.submitted = true;
+    if (
+      this.addMassageSettingForm.valid &&
+      this.addMassageSettingForm.errors == null &&
+      this.isMassageSettingEmpty == false
+    ) {
+      let data = this.addMassageSettingForm.value;
+      console.log(data);
+      this.apiService
+        .post('api/massageSetting/addOrUpdateMassageSettingWeb', data)
+        .subscribe(
+          (res) => {
+            this.spinnerService.deactivate();
+            if (res.isError) {
+              this.toastService.showToast('danger', 'Error', res.message);
+            } else if (res.isTokenExpired) {
+              this.toastService.showToast('danger', 'Error', res.message);
+              this.storageService.clear();
+              this.router.navigate(['/']);
+            } else {
+              this.toastService.showToast(
+                'success',
+                'Successful',
+                'New massage setting added successfully.'
+              );
+              this.router.navigate(['/dashboard/massageSetting']);
+            }
+          },
+          (err) => {
+            this.spinnerService.deactivate();
+            if (!err.ok && err.status == 0) {
+              this.toastService.showToast('danger', 'Error', err.message);
+            } else {
+              this.toastService.showToast(
+                'danger',
+                'Error',
+                err.error?.message ?? 'Error connecting to server!'
+              );
+            }
+          }
+        );
+    } else {
+      console.log(this.addMassageSettingForm);
+      this.spinnerService.deactivate();
+    }
   }
 
   get form() {
@@ -506,6 +553,6 @@ export class AddMassageSettingComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.subscribe.unsubscribe();
+    this.subscription.unsubscribe();
   }
 }
