@@ -74,75 +74,7 @@ export class AddMassageSettingComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.types = [
-    //   { value: 'DOCTOR_RECOMMEND', name: 'DOCTOR RECOMMEND' },
-    //   { value: 'DEFAULT_SETTING', name: 'DEFAULT SETTING' },
-    //   { value: 'USER_CUSTOMIZE', name: 'USER CUSTOMIZE' },
-    // ];
-
-    //  this.exampleData =[
-    //   {
-    //     description: 'Duration: 5 <br/>Strength: 40',
-    //     color: '#' + this.randomColor(),
-    //     data: [{
-    //       y: 5,
-    //   }],
-    //   },
-    //   {
-    //     description: 'Duration: 2 <br/>Strength: 40',
-    //     color: '#' + this.randomColor(),
-    //     data: [{
-    //       y: 2,
-    //   }],
-    //   },
-    //   {
-    //     description: 'Duration: 3 <br/>Strength: 40',
-    //     color: '#' + this.randomColor(),
-    //     data: [{
-    //       y: 3,
-
-    //   }],
-    //   },
-    //   {
-    //     description: 'Duration: 4 <br/>Strength: 40',
-    //     color: '#' + this.randomColor(),
-    //     data: [{
-    //       y: 4,
-    //   }],
-    //   },
-    //   {
-    //     description: 'Duration: 1 <br/>Strength: 40',
-    //     color: '#' + this.randomColor(),
-    //     data: [{
-    //       y: 1,
-    //   }],
-    //   },
-    //   {
-    //     description: 'Duration: 6 <br/>Strength: 40',
-    //     color: '#' + this.randomColor(),
-    //     data: [{
-    //       y: 6,
-
-    //   }],
-    //   },
-    //   {
-    //     description: 'Duration: 6 <br/>Strength: 40',
-    //     color: '#' + this.randomColor(),
-    //     data: [{
-    //       y: 4,
-    //   }],
-    //   },
-    //   {
-    //     description: 'Duration: 5 <br/>Strength: 40',
-    //     color: '#' + this.randomColor(),
-    //     data: [{
-    //       y: 5,
-    //   }],
-    //   },
-    // ];
-
-    // this.oneLineBar = ConstructureLineBar([{ type: 'bar', data: [] }]);
-
+  
     var options: Options = {
       chart: {
         type: 'bar',
@@ -245,13 +177,20 @@ export class AddMassageSettingComponent implements OnInit {
 
   initializeLineGraphData(data: any) {
     data.map((item: any) => {
-      this.addDataToForm(item.d, item.s)
+      this.addDataToForm(item.d, item.s - 80)
     });
   }
 
   private randomColor() {
-   // return Math.floor(Math.random() * 16777215).toString(16);
-   return Math.floor(0x1000000 * Math.random()).toString(16);
+
+    var colorCode = Math.floor(Math.random() * 16777215).toString(16);
+
+    do {
+      colorCode = Math.floor(Math.random() * 16777215).toString(16);
+    } while (colorCode == "000000");
+    
+    return colorCode;
+  // return Math.floor(0x1000000 * Math.random()).toString(16);
   }
 
   goback() {
@@ -286,7 +225,7 @@ export class AddMassageSettingComponent implements OnInit {
               ].value.d = value.data.duration;
               this.massageSettingControls.controls[
                 value.massageSettingIndex
-              ].value.s = value.data.strength;
+              ].value.s = value.data.strength + 80;
 
               this.dataDisplay[value.massageSettingIndex].Duration =
                 value.data.duration;
@@ -418,7 +357,7 @@ export class AddMassageSettingComponent implements OnInit {
   private newMassageConfiguration(duration: number, strength: number) {
     return this.formBuilder.group({
       d: duration,
-      s: strength,
+      s: strength + 80,
     });
   }
 
