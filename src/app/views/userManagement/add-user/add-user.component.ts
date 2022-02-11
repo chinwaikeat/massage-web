@@ -32,7 +32,7 @@ export class AddUserComponent implements OnInit {
     private storageService: StorageService,) {
       this.addUserForm = this.formBuilder.group(
         {
-          userId: [0],
+          userId: [''],
           firstName: ['', Validators.required],
           lastName: ['', Validators.required],
           userName: ['', Validators.required],

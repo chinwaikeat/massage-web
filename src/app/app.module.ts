@@ -24,8 +24,7 @@ import { ModalModule } from './@theme/components/modal/modal.module';
 import { RatingComponent } from './views/rating/rating/rating.component';
 import { ViewRatingComponent } from './views/rating/view-rating/view-rating.component';
 import { MassageSettingListComponent } from './views/massageManagement/massage-setting-list/massage-setting-list.component';
-import { ViewOrEditMassageSettingComponent } from './views/massageManagement/view-or-edit-massage-setting/view-or-edit-massage-setting.component';
-import { AddMassageSettingComponent } from './views/massageManagement/add-massage-setting/add-massage-setting.component';
+import { EditOrAddMassageSettingComponent } from './views/massageManagement/edit-or-add-massage-setting/edit-or-add-massage-setting.component';
 import { ChartModule} from 'angular-highcharts';
 import { CounterDialogComponent } from './views/massageManagement/counter-dialog/counter-dialog.component';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
@@ -46,8 +45,7 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider';
     RatingComponent,
     ViewRatingComponent,
     MassageSettingListComponent,
-    ViewOrEditMassageSettingComponent,
-    AddMassageSettingComponent,
+    EditOrAddMassageSettingComponent,
     CounterDialogComponent,
   ],
   imports: [

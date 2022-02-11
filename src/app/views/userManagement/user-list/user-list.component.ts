@@ -152,7 +152,7 @@ export class UserListComponent implements OnInit {
       },
     }).onClose.subscribe(value => {
       if(value == 1){
-       // this.getUserData();
+        this.getUserListData();
       }
     })
   }

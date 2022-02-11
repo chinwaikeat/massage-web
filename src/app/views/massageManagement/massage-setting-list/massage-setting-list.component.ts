@@ -12,7 +12,6 @@ import { ToastService } from '../../../services/toastService/toast.service';
 import { NbDialogService  } from '@nebular/theme';
 import { HttpParams } from '@angular/common/http';
 import { ConfirmationModalComponent } from '../../../@theme/components/modal/confirmation-modal/confirmation-modal.component';
-import { ViewOrEditMassageSettingComponent } from '../view-or-edit-massage-setting/view-or-edit-massage-setting.component';
 import { DataCommunicationService } from 'src/app/services/dataCommunication/data-communication.service';
 
 @Component({

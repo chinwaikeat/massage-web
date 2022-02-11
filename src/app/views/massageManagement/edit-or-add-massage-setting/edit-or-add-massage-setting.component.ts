@@ -36,7 +36,7 @@ import { DataCommunicationService } from 'src/app/services/dataCommunication/dat
   templateUrl: './add-massage-setting.component.html',
   styleUrls: ['./add-massage-setting.component.scss'],
 })
-export class AddMassageSettingComponent implements OnInit {
+export class EditOrAddMassageSettingComponent implements OnInit {
   subscription!: Subscription;
   isEdit: boolean = false;
   massageSettingType: any;
@@ -64,7 +64,7 @@ export class AddMassageSettingComponent implements OnInit {
     @Optional() private dialogService: NbDialogService
   ) {
     this.addMassageSettingForm = this.formBuilder.group({
-      massageSettingId: [0, Validators.required],
+      massageSettingId: ['', Validators.required],
       type: [''],
       description: ['', Validators.required],
       massageConfiguration: this.formBuilder.array([], Validators.required),
