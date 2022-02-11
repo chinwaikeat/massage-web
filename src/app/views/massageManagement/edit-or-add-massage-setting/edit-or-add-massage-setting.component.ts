@@ -33,8 +33,8 @@ import { DataCommunicationService } from 'src/app/services/dataCommunication/dat
 
 @Component({
   selector: 'app-add-massage-setting',
-  templateUrl: './add-massage-setting.component.html',
-  styleUrls: ['./add-massage-setting.component.scss'],
+  templateUrl: './edit-or-add-massage-setting.component.html',
+  styleUrls: ['./edit-or-add-massage-setting.component.scss'],
 })
 export class EditOrAddMassageSettingComponent implements OnInit {
   subscription!: Subscription;
