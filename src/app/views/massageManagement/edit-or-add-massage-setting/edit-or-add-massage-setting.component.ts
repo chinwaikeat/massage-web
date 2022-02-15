@@ -64,7 +64,7 @@ export class EditOrAddMassageSettingComponent implements OnInit {
     @Optional() private dialogService: NbDialogService
   ) {
     this.addMassageSettingForm = this.formBuilder.group({
-      massageSettingId: ['', Validators.required],
+      massageSettingId: [''],
       type: [''],
       description: ['', Validators.required],
       massageConfiguration: this.formBuilder.array([], Validators.required),
